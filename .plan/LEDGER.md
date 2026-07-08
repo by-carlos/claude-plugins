@@ -10,7 +10,7 @@ and notes block at the end of every session (Operating protocol step 7).
 |---|---|---|---|---|
 | S0 Plugin scaffold & manifest | done | yes | 2026-07-08 | plugin.json + skill/commands dirs created, validated |
 | S1 Scaffold templates | done | yes | 2026-07-08 | Four templates authored; consistency + no-leak checks pass; dependency gate hardened to require merged prerequisite branch |
-| S2 SKILL.md | todo | — | — | — |
+| S2 SKILL.md | done | yes | 2026-07-08 | SKILL.md authored (lean, points to templates); prompt.md absorbed & deleted |
 | S3 `/plan-stages` command | todo | — | — | — |
 | S4 `/plan-run` command | todo | — | — | — |
 | S5 `/plan-close` command | todo | — | — | — |
@@ -94,7 +94,50 @@ style, internal consistency (statuses / table columns / file names / flag names
 identical and matching frozen decisions), no pilot-specific content.
 
 ### S2 SKILL.md
-_(empty)_
+Wrote `plan-staged-rollout/skills/staged-rollout/SKILL.md` — the method body the
+commands lean on. Sections: when to use / when not; core principles (single
+source of truth, session-per-stage, evidence ledger, verify-before-done);
+decomposition guidance (smallest sensible stage, group by effort, keystone S0,
+standing final review stage); statuses + human-gated `blocked` runbook pattern;
+flag heuristics (defaults cheap, escalate only for genuine design/churn); git
+model (branch-per-stage default + alternatives, flat names, propose-don't-merge);
+review-stage semantics (catalogs, three outcomes, never implements); closeout
+semantics; anti-patterns. Formats are delegated to `references/templates/` via
+progressive disclosure — no template content restated (PLAN/LEDGER/stage-N/README
+formats are pointed at, not duplicated).
+
+Absorbed `plan-staged-rollout/plan-staged-rollout.prompt.md` (old solution-agnostic
+method doc) into SKILL.md + the S1 templates + README, then deleted it per the
+frozen decision (content survives in git history). The one nugget not already
+elsewhere in the *skill* — the `blocked`-stage runbook pattern and explicit
+gap/hazard tracking — was pulled into the new "Statuses and human-gated stages"
+section.
+
+Acceptance evidence:
+```
+$ python -c "... parse frontmatter, check field lengths ..."
+name: 'staged-rollout' len 14
+desc len: 577
+OK frontmatter parses; name & description present and within limits
+  # name == 'staged-rollout' (<=64); description 577 chars (<=1024 Claude Code limit)
+
+$ grep -nE '^## ' SKILL.md   # every required body section present
+19:## When to use it
+26:## When NOT to use it
+41:## Core principles
+60:## Decomposing the work
+71:## Flag heuristics
+89:## Statuses and human-gated stages
+108:## Git model
+135:## The final review stage
+154:## Closeout
+164:## Anti-patterns this exists to prevent
+
+$ test -f plan-staged-rollout/plan-staged-rollout.prompt.md && echo EXISTS || echo absent
+deleted: confirmed absent
+```
+Description triggers on big multi-session/staged/milestone rollouts and
+resumable plans, and explicitly excludes single-session/≤3-session work.
 
 ### S3 `/plan-stages` command
 _(empty)_
