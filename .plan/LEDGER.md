@@ -8,7 +8,7 @@ and notes block at the end of every session (Operating protocol step 7).
 
 | Stage | Status | Verified | Date | Result |
 |---|---|---|---|---|
-| S0 Plugin scaffold & manifest | todo | — | — | — |
+| S0 Plugin scaffold & manifest | done | yes | 2026-07-08 | plugin.json + skill/commands dirs created, validated |
 | S1 Scaffold templates | todo | — | — | — |
 | S2 SKILL.md | todo | — | — | — |
 | S3 `/plan-stages` command | todo | — | — | — |
@@ -23,7 +23,29 @@ As-built notes, acceptance evidence, gotchas, handoff notes. One block per
 stage; sessions read only the blocks of their `depends` stages.
 
 ### S0 Plugin scaffold & manifest
-_(empty)_
+Verified plugin.json schema against current Claude Code docs
+(`code.claude.com/docs/en/plugins-reference`): only `name` is required;
+used `name`, `version`, `description`, `author` (all recognized metadata
+fields).
+
+Created:
+- `plan-staged-rollout/.claude-plugin/plugin.json`
+- `plan-staged-rollout/skills/staged-rollout/references/templates/` (empty, `.gitkeep`)
+- `plan-staged-rollout/commands/` (empty, `.gitkeep`)
+
+Acceptance evidence:
+```
+$ python -c "import json; json.load(open('plan-staged-rollout/.claude-plugin/plugin.json', encoding='utf-8'))"
+# parses cleanly, no exception
+$ find plan-staged-rollout -type f | sort
+plan-staged-rollout/.claude-plugin/plugin.json
+plan-staged-rollout/README.md
+plan-staged-rollout/commands/.gitkeep
+plan-staged-rollout/plan-staged-rollout.prompt.md
+plan-staged-rollout/skills/staged-rollout/references/templates/.gitkeep
+```
+Tree matches PLAN.md → Architecture (skills/commands dirs empty pending S1-S4).
+No `jq` available in this shell; validated with Python's `json` module instead.
 
 ### S1 Scaffold templates
 _(empty)_
