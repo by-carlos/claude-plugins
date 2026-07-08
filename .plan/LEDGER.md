@@ -11,7 +11,7 @@ and notes block at the end of every session (Operating protocol step 7).
 | S0 Plugin scaffold & manifest | done | yes | 2026-07-08 | plugin.json + skill/commands dirs created, validated |
 | S1 Scaffold templates | done | yes | 2026-07-08 | Four templates authored; consistency + no-leak checks pass; dependency gate hardened to require merged prerequisite branch |
 | S2 SKILL.md | done | yes | 2026-07-08 | SKILL.md authored (lean, points to templates); prompt.md absorbed & deleted |
-| S3 `/plan-stages` command | todo | — | — | — |
+| S3 `/plan-stages` command | done | yes | 2026-07-08 | plan-stages.md authored as thin wrapper; frontmatter parses, six flow steps in order, references skill/templates |
 | S4 `/plan-run` command | todo | — | — | — |
 | S5 `/plan-close` command | todo | — | — | — |
 | S6 End-to-end dogfood test | todo | — | — | — |
@@ -140,7 +140,52 @@ Description triggers on big multi-session/staged/milestone rollouts and
 resumable plans, and explicitly excludes single-session/≤3-session work.
 
 ### S3 `/plan-stages` command
-_(empty)_
+Wrote `plan-staged-rollout/commands/plan-stages.md` — the bootstrap wrapper. It
+loads the `staged-rollout` skill for method, points at
+`${CLAUDE_PLUGIN_ROOT}/skills/staged-rollout/references/templates/` for the file
+formats, and drives six ordered flow steps: (1) weight gate first — Opus-class
+model verified from the session, effort medium+ as a reminder, warn+offer-abort
+on a lighter model before any work; (2) design pass only if unsettled —
+`superpowers:brainstorming` when installed else a one-question-at-a-time
+multiple-choice fallback, outcomes landing as Frozen decisions in the scaffolded
+`PLAN.md`, never a separate spec; (3) decompose per skill guidance (smallest
+stages, explicit `depends`, keystone S0, cheap flags) then append the standing
+`SF: plan review` stage; (4) git-strategy question (default branch-per-stage;
+single-plan-branch and trunk offered; recorded as a frozen decision; no branch
+created at bootstrap); (5) scaffold from templates, fill placeholders, propose
+the scaffold commit; (6) end announcement — bootstrap finished, no stage
+executed, next action `/plan-run 0` in a fresh session with S0's model/effort.
+No protocol restated — the file explicitly names the skill+templates as the
+single source of truth and tells the flow to reference, not duplicate, it.
+
+Acceptance evidence:
+```
+$ python -c "... parse frontmatter, assert description + argument-hint present"
+frontmatter OK
+  description: Bootstrap a staged-rollout .plan/ from a project i ...
+  argument-hint: <project idea>
+
+$ grep -nE '^[0-9]+\. \*\*' plan-stages.md   # six flow steps, in order
+24:1. **Weight gate (first, before anything else).**
+32:2. **Design pass (only if the design isn't already settled).**
+41:3. **Decompose.**
+47:4. **Git strategy question.**
+55:5. **Scaffold and commit.**
+62:6. **End announcement.**
+
+$ grep -nE 'staged-rollout|references/templates|single source of truth' plan-stages.md
+10:wrapper around the `staged-rollout` skill; the skill and its
+11:`references/templates/` are the single source of truth for the method and file
+16:First, load the method: invoke the **`staged-rollout`** skill ...
+```
+Checklist review: every plan step is present and in order — frontmatter
+(`description` + `argument-hint: <project idea>`), weight gate first, design
+pass with brainstorming/fallback → frozen decisions, decomposition + appended
+`SF`, git-strategy question with alternatives recorded as a frozen decision and
+no unilateral branch creation, scaffold-from-templates + proposed commit, and
+the end announcement pointing at `/plan-run 0`. The command references the
+skill/templates rather than restating the protocol (no second source of truth).
+Live behavior is deferred to S6 (dogfood).
 
 ### S4 `/plan-run` command
 _(empty)_
