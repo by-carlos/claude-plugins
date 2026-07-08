@@ -93,11 +93,16 @@ Change these in THIS file only — never restate them in stage files.
    flag (the system prompt states your model); remind the recommended
    `effort` (you cannot verify it). If the session is lighter than
    recommended, say so and offer continue/abort before doing anything.
-3. **Dependency gate:** if any `depends` stage isn't `done` in `LEDGER.md`,
-   stop and say so.
-4. **Branch:** propose creating `plan-staged-rollout-s<N>` from
-   `plan-staged-rollout` and wait for Carlos's OK (he may create it himself).
-   Work happens on the stage branch.
+3. **Dependency gate:** for every `depends` stage, confirm it is `done` in
+   `LEDGER.md` **AND its stage branch/PR is merged into the plan branch**
+   (`git fetch` first — the merge may be remote and not yet local). Both must
+   hold. A `done` ledger row alone is not enough: a stage branched off the
+   plan branch before a prerequisite's PR is merged will silently lack that
+   prerequisite's work. If either isn't true, stop and say so.
+4. **Branch:** first make sure the local `plan-staged-rollout` branch is up to
+   date (`git fetch` + fast-forward), then propose creating
+   `plan-staged-rollout-s<N>` from `plan-staged-rollout` and wait for Carlos's
+   OK (he may create it himself). Work happens on the stage branch.
 5. **Honor `mode`/`exec`** (all stages here are `direct`/`inline`: state a
    one-line plan, implement — no brainstorming pass, no subagents).
 6. **Scope discipline:** do only this stage. Work belonging to another stage

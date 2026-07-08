@@ -9,7 +9,7 @@ and notes block at the end of every session (Operating protocol step 7).
 | Stage | Status | Verified | Date | Result |
 |---|---|---|---|---|
 | S0 Plugin scaffold & manifest | done | yes | 2026-07-08 | plugin.json + skill/commands dirs created, validated |
-| S1 Scaffold templates | todo | — | — | — |
+| S1 Scaffold templates | done | yes | 2026-07-08 | Four templates authored; consistency + no-leak checks pass; dependency gate hardened to require merged prerequisite branch |
 | S2 SKILL.md | todo | — | — | — |
 | S3 `/plan-stages` command | todo | — | — | — |
 | S4 `/plan-run` command | todo | — | — | — |
@@ -48,7 +48,50 @@ Tree matches PLAN.md → Architecture (skills/commands dirs empty pending S1-S4)
 No `jq` available in this shell; validated with Python's `json` module instead.
 
 ### S1 Scaffold templates
-_(empty)_
+Authored the four scaffold templates `/plan-stages` copies:
+`plan-staged-rollout/skills/staged-rollout/references/templates/{PLAN,LEDGER,stage-N,README}.md`.
+They carry the frozen decisions' flag set (`depends/mode/exec/model/effort`),
+the ledger split (one-line status table + per-stage notes blocks), checkbox
+Steps, evidence-based Acceptance, and the full operating protocol. Placeholders
+use a single `<angle-bracket>` style throughout. Removed the now-redundant
+`templates/.gitkeep` (S0 left it; the dir now has real content).
+
+Cross-checked against the pilot (`C:\GitHub\linux\.plan`, read-only): templates
+cover blocked/runbook stages, follow-up stages, and frozen-decision amendments
+(LEDGER notes state-guide comment + PLAN finish-step 3), while fixing the
+pilot's known flaw — the pilot crammed ~500-word notes into ledger table cells;
+these templates force one-line rows with detail in notes blocks. No pilot
+homelab/logging content leaked in.
+
+**Frozen-decision amendment (Operating protocol step 3 + 4):** the dependency
+gate now requires each `depends` stage to be BOTH `done` in the ledger AND its
+branch/PR merged into the plan branch (with a `git fetch` first), and step 4
+fast-forwards the plan branch before branching. This came directly from a real
+miss this session: S1 was first branched off the plan branch *before* S0's PR
+was merged, so it silently lacked S0's work. Hardened in both this file's
+protocol and the deliverable template `PLAN.md`.
+
+Acceptance evidence:
+```
+$ ls -1   # dir holds exactly the four templates
+LEDGER.md
+PLAN.md
+README.md
+stage-N.md
+$ grep "Stage | Status | Verified | Date | Result" LEDGER.md   # ledger cols
+15:| Stage | Status | Verified | Date | Result |
+$ grep "Stage | File | Depends | mode | exec | model | effort" PLAN.md  # index cols
+39:| Stage | File | Depends | mode | exec | model | effort |
+$ grep -rhoE "\b(todo|doing|done|blocked|skipped)\b" . | sort -u   # status vocab
+blocked doing done skipped todo   # no stray statuses
+$ grep -rniE "victorialogs|ofelia|homelab|syslog|mobydock|komodo|rsyslog|\bvector\b|haos|adguard|synology|proxmox|deadman|logsql" .
+clean   # no pilot leakage
+$ grep -rnoE "\{[a-z_]+\}|FIXME|XXX|TODO_" .
+angle-brackets only   # single placeholder style
+```
+All Acceptance criteria met: four templates exist, one consistent placeholder
+style, internal consistency (statuses / table columns / file names / flag names
+identical and matching frozen decisions), no pilot-specific content.
 
 ### S2 SKILL.md
 _(empty)_
