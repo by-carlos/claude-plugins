@@ -12,7 +12,7 @@ and notes block at the end of every session (Operating protocol step 7).
 | S1 Scaffold templates | done | yes | 2026-07-08 | Four templates authored; consistency + no-leak checks pass; dependency gate hardened to require merged prerequisite branch |
 | S2 SKILL.md | done | yes | 2026-07-08 | SKILL.md authored (lean, points to templates); prompt.md absorbed & deleted |
 | S3 `/plan-stages` command | done | yes | 2026-07-08 | plan-stages.md authored as thin wrapper; frontmatter parses, six flow steps in order, references skill/templates |
-| S4 `/plan-run` command | todo | — | — | — |
+| S4 `/plan-run` command | done | yes | 2026-07-08 | plan-run.md authored as thin wrapper; frontmatter parses, six ordered flow steps, defers to project PLAN.md with no protocol copy |
 | S5 `/plan-close` command | todo | — | — | — |
 | S6 End-to-end dogfood test | todo | — | — | — |
 | SF Plan review | todo | — | — | — |
@@ -188,7 +188,46 @@ skill/templates rather than restating the protocol (no second source of truth).
 Live behavior is deferred to S6 (dogfood).
 
 ### S4 `/plan-run` command
-_(empty)_
+Wrote `plan-staged-rollout/commands/plan-run.md` — the stage runner. It is a
+thin ergonomic wrapper: it does NOT carry the operating protocol. Instead it
+(1) locates `.plan/` and resolves `$ARGUMENTS` to `stage-<N>-<slug>.md`, erroring
+clearly if `.plan/` is absent (points to `/plan-stages`) or the number matches no
+stage file (lists the valid ones); (2) reads and defers to the project's own
+`.plan/PLAN.md` Operating protocol verbatim (read-scope, dependency gate,
+mode/exec, scope discipline, finish protocol all come from there — so a `.plan/`
+keeps working standalone via "Follow the instructions in `.plan/stage-N-...md`");
+(3) weight check — model verified from the system prompt, effort reminded not
+verified, warn+offer continue/abort when the session is lighter than the stage's
+flags; (4) surfaces the protocol's dependency gate; (5) resume support — if the
+ledger row is `doing`, continue from unticked checkboxes + handoff note (and
+confirm before redoing a `done` stage); (6) end announcement — outcome
+(`finished`/`blocked`/`doing` with what's pending), the next runnable stage as an
+exact `/plan-run <N>` command with its recommended model/effort, or `/plan-close`
+when none remain.
+
+Acceptance evidence:
+```
+$ python -c "... parse frontmatter, assert description + argument-hint present"
+OK frontmatter parses
+  description len: 161
+  argument-hint: <stage number>
+
+$ grep -nE '^[0-9]+\. \*\*' plan-run.md   # six flow steps, in order
+18:1. **Locate `.plan/`.**
+24:2. **Defer to the project protocol.**
+30:3. **Weight check (ergonomic add).**
+38:4. **Dependency gate (ergonomic surfacing of the protocol's rule).**
+43:5. **Resume support.**
+49:6. **End announcement.**
+
+$ grep -niE 'read only:|weight check:|dependency gate:|finish protocol|scope discipline:|honor .mode' plan-run.md
+26:   `mode`/`exec` handling, scope discipline, and the finish protocol all come
+   # single hit is an explicit DEFERRAL ("...come from that file, not from this
+   # command"), not a copy of the protocol steps — grep-level no-copy check passes.
+```
+Grep-level check confirms the command contains no copy of the operating protocol
+steps; it references/defers to the project's `PLAN.md`. Live behavior deferred to
+S6 (dogfood).
 
 ### S5 `/plan-close` command
 _(empty)_
