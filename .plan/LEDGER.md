@@ -13,7 +13,7 @@ and notes block at the end of every session (Operating protocol step 7).
 | S2 SKILL.md | done | yes | 2026-07-08 | SKILL.md authored (lean, points to templates); prompt.md absorbed & deleted |
 | S3 `/plan-stages` command | done | yes | 2026-07-08 | plan-stages.md authored as thin wrapper; frontmatter parses, six flow steps in order, references skill/templates |
 | S4 `/plan-run` command | done | yes | 2026-07-08 | plan-run.md authored as thin wrapper; frontmatter parses, six ordered flow steps, defers to project PLAN.md with no protocol copy |
-| S5 `/plan-close` command | todo | — | — | — |
+| S5 `/plan-close` command | done | yes | 2026-07-08 | plan-close.md authored as thin wrapper; frontmatter parses, six ordered flow steps including refusal gate, distillation, and cleanup-with-keep-option |
 | S6 End-to-end dogfood test | todo | — | — | — |
 | SF Plan review | todo | — | — | — |
 
@@ -230,7 +230,42 @@ steps; it references/defers to the project's `PLAN.md`. Live behavior deferred t
 S6 (dogfood).
 
 ### S5 `/plan-close` command
-_(empty)_
+Wrote `plan-staged-rollout/commands/plan-close.md` — the closeout wrapper. No
+argument (matches the frozen decision). Six ordered steps: (1) locate `.plan/`,
+refusing gracefully if absent; (2) completion gate — refuses to run unless
+every `LEDGER.md` row is `done` or `skipped` (including stages the `SF` review
+spawned), listing exactly which stages are pending and what to run instead
+(`/plan-run <N>` or resolve the `blocked` runbook), stopping before any
+distillation/cleanup; (3) distill `PLAN.md` + the full ledger — including the
+`SF` stage's spin-off candidates and accepted-won't-fix items — into a
+summarized (not pasted-raw) final PR body, so the why and as-built story
+survive on `main`; (4) clean up `.plan/` — offers delete-as-last-commit
+(default) vs keep-for-docs, proposes the delete commit and waits for the user;
+(5) proposes the final PR from the plan branch to `main`, never merges/pushes
+unilaterally; (6) end announcement — plan closed, PR proposed/opened, nothing
+left to run.
+
+Acceptance evidence:
+```
+$ python -c "... parse frontmatter, assert description present, no argument-hint ..."
+description: Close out a finished staged-rollout .plan/ — verify completion,
+  distill the story into a final PR body, clean up .plan/, and propose the PR
+  to main.
+OK: frontmatter parses, description present, no argument-hint
+
+$ grep -nE '^[0-9]+\. \*\*' plan-close.md   # six flow steps, in order
+15:1. **Locate `.plan/`.**
+19:2. **Completion gate.**
+26:3. **Distill the story.**
+38:4. **Clean up `.plan/`.**
+46:5. **Propose the final PR.**
+50:6. **End announcement.**
+```
+Checklist review confirms the refusal path (lists pending stages + what to run
+instead), the distillation step folding in spin-off/won't-fix items from the
+review stage, the delete-with-keep-option cleanup, and the propose-never-merge
+PR step. Live behavior (refusal with pending stages) is deferred to S6
+(dogfood), per the stage file's Acceptance note.
 
 ### S6 End-to-end dogfood test
 _(empty)_
