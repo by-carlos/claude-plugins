@@ -49,15 +49,19 @@ Then work through these steps **in order**:
    and PR per stage, no per-stage exceptions, final PR to `main` at closeout.
    Offer the alternatives: **single plan branch** (direct commits — infra-style
    rollouts) or **trunk**. Record the choice as a **frozen decision** in
-   `PLAN.md`. Do **not** create any branch here — branch creation is proposed to
-   the user and happens at stage time, never unilaterally at bootstrap.
+   `PLAN.md`. Do **not** create any *stage* branch here — stage branches
+   (`plan-<slug>-s<N>`) are proposed and created at stage time by `/plan-run`,
+   never at bootstrap.
 
-5. **Scaffold and commit.** Copy the four templates into `<repo>/.plan/`, rename
-   `stage-N.md` to `stage-<N>-<slug>.md` per stage, and fill every placeholder
-   (frozen decisions, stage index, ledger rows, per-stage files). Then **propose
-   the scaffold commit** (conventional message, e.g.
-   `chore(plan): scaffold .plan/ for <slug>`) and wait for the user's OK — do
-   not commit unilaterally.
+5. **Scaffold and commit.** Copy the four templates into `<repo>/.plan/`, copying
+   `stage-N.md` **once per stage** and renaming each to `stage-<N>-<slug>.md`,
+   and fill every placeholder (frozen decisions, stage index, ledger rows,
+   per-stage files). Then land the scaffold on the plan branch: unless the chosen
+   strategy is **trunk**, **propose creating the plan branch `plan-<slug>` off
+   `main`** and put the scaffold there — `.plan/` lives on the plan branch (for
+   trunk, it stays on the current branch). **Propose the scaffold commit**
+   (conventional message, e.g. `chore(plan): scaffold .plan/ for <slug>`) and
+   wait for the user's OK — do not create the branch or commit unilaterally.
 
 6. **End announcement.** State explicitly that **bootstrap is finished and no
    stage was executed.** Tell the user their next action is **`/plan-run 0`** in

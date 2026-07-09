@@ -1,6 +1,6 @@
 ---
 description: Execute one stage of a staged-rollout .plan/ — locate the stage, follow the project's own PLAN.md protocol, verify launch weight, and hand off to the next stage.
-argument-hint: <stage number>
+argument-hint: <stage number, or f for the review stage>
 ---
 
 # /plan-run — execute one stage
@@ -17,9 +17,11 @@ Work through these steps **in order**:
 
 1. **Locate `.plan/`.** Find the `.plan/` directory at the repo root. If none
    exists, stop and tell the user to bootstrap one with `/plan-stages <idea>`.
-   Then resolve `$ARGUMENTS` to the stage file `.plan/stage-<N>-<slug>.md`
-   (match on the leading `stage-<N>-`). If no file matches that number, stop and
-   list the stage files that do exist so the user can pick a valid number.
+   Then resolve `$ARGUMENTS` to the stage file `.plan/stage-<N>-<slug>.md` by
+   matching the leading `stage-<$ARGUMENTS>-` token — a digit for an
+   implementation stage, or `f` for the final review stage
+   (`stage-f-review.md`). If nothing matches, stop and list the stage files that
+   do exist so the user can pick a valid one.
 
 2. **Defer to the project protocol.** Read `.plan/PLAN.md` and follow its
    **Operating protocol** verbatim for this stage — read-scope, dependency gate,
