@@ -45,7 +45,7 @@ Change these in THIS file only — never restate them in stage files.
   existing branch) + PR into the plan branch, **no exceptions per stage**;
   final PR plan branch → `main` at closeout. Alternatives offered only at
   bootstrap: single plan branch (infra-style) or trunk.
-- Agent proposes every branch/PR/merge/push and waits for Carlos's OK; it
+- Agent proposes every branch/PR/merge/push and waits for the human's OK; it
   never merges or pushes on its own.
 - `/plan-stages` gates on session weight: model must be Opus-class or better
   (verified from the session); effort medium+ is a stated reminder — effort
@@ -67,8 +67,8 @@ Change these in THIS file only — never restate them in stage files.
 - Deferred (roadmap, do NOT build now): subagent fan-out for sub-steps,
   parallel stage execution, `next-stage` helper script, progress dashboard,
   skill evals.
-- Pilot reference (read-only, for cross-checking templates):
-  `C:\GitHub\linux\.plan`.
+- Pilot reference (read-only, for cross-checking templates): an earlier
+  real-world `.plan/` rollout on the maintainer's machine.
 
 ## Stage index & dependencies
 
@@ -101,8 +101,8 @@ Change these in THIS file only — never restate them in stage files.
    prerequisite's work. If either isn't true, stop and say so.
 4. **Branch:** first make sure the local `plan-staged-rollout` branch is up to
    date (`git fetch` + fast-forward), then propose creating
-   `plan-staged-rollout-s<N>` from `plan-staged-rollout` and wait for Carlos's
-   OK (he may create it himself). Work happens on the stage branch.
+   `plan-staged-rollout-s<N>` from `plan-staged-rollout` and wait for the
+   human's OK (they may create it themselves). Work happens on the stage branch.
 5. **Honor `mode`/`exec`** (all stages here are `direct`/`inline`: state a
    one-line plan, implement — no brainstorming pass, no subagents).
 6. **Scope discipline:** do only this stage. Work belonging to another stage
@@ -115,7 +115,7 @@ Change these in THIS file only — never restate them in stage files.
    3. If a decision changed or was added, amend **Frozen decisions in this
       file** — nowhere else.
    4. Commit on the stage branch (conventional message), then propose the PR
-      into `plan-staged-rollout` and wait for Carlos.
+      into `plan-staged-rollout` and wait for the human.
    5. Announce: this stage is **finished**; the next runnable stage (first
       `todo` whose `depends` are all `done`), the exact prompt/command to run
       it, and its recommended model/effort. Stop.

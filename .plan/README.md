@@ -29,6 +29,6 @@ commands.)
 
 Plan branch: `plan-staged-rollout` (already checked out). Each stage works on
 `plan-staged-rollout-s<N>` and PRs back into the plan branch; the final PR to
-`main` happens at closeout. Branch/PR/merge/push are proposed to Carlos, never
+`main` happens at closeout. Branch/PR/merge/push are proposed to the human, never
 executed unilaterally. Once SF is done, closeout can dogfood `/plan-close` on
 this very plan.

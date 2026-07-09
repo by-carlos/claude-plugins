@@ -31,7 +31,7 @@ ledger diet, checkbox steps, flags, and the full operating protocol.
 - [ ] `references/templates/README.md` — project-facing entry point: the
       one-line runner prompt, `/plan-run <N>` usage, file map, git model
       summary.
-- [ ] Cross-check against the pilot (`C:\GitHub\linux\.plan`, read-only): the
+- [ ] Cross-check against the pilot (an earlier real-world `.plan/` rollout, read-only): the
       templates must cover everything the pilot needed (blocked/runbook
       stages, follow-up stages, frozen-decision amendments) while fixing its
       known flaw (notes crammed into table cells).

@@ -56,7 +56,7 @@ Steps, evidence-based Acceptance, and the full operating protocol. Placeholders
 use a single `<angle-bracket>` style throughout. Removed the now-redundant
 `templates/.gitkeep` (S0 left it; the dir now has real content).
 
-Cross-checked against the pilot (`C:\GitHub\linux\.plan`, read-only): templates
+Cross-checked against the pilot (an earlier real-world `.plan/` rollout, read-only): templates
 cover blocked/runbook stages, follow-up stages, and frozen-decision amendments
 (LEDGER notes state-guide comment + PLAN finish-step 3), while fixing the
 pilot's known flaw — the pilot crammed ~500-word notes into ledger table cells;
