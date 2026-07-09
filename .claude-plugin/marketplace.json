@@ -1,0 +1,13 @@
+{
+  "name": "carlos-plugins",
+  "owner": {
+    "name": "Carlos"
+  },
+  "plugins": [
+    {
+      "name": "plan-staged-rollout",
+      "source": "./plan-staged-rollout",
+      "description": "Run big projects as many small sessions — not one huge one."
+    }
+  ]
+}
