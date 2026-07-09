@@ -153,8 +153,9 @@ plan-<slug> → final PR → main       ← at /plan-close
   quietly becomes twenty commits of fixes bleeding into shared history.
 - Branch names are flat (`plan-<slug>-s3`, not `plan/<slug>/s3`) because git
   refs can't nest a branch under an existing branch name.
-- Branch creation, PRs, and merges are always **proposed to you and executed
-  on your acceptance** — the agent never merges on its own.
+- Feature-branch plumbing is autonomous: the agent **creates and pushes** stage
+  and plan branches without asking. PRs and merges are **offered** and happen
+  only on your OK — it never merges on its own, and never pushes to `main`.
 - The strategy is recorded as a frozen decision at bootstrap. Alternatives
   (single plan branch with direct commits — sensible for infra-style rollouts
   where the deliverable is applied host state rather than repo code — or plain
