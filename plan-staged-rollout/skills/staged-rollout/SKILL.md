@@ -124,9 +124,11 @@ plan-<slug> → final PR → main         ← at closeout
   fixes bleeding into shared history.
 - **Flat branch names** (`plan-<slug>-s3`, not `plan/<slug>/s3`) — git refs can't
   nest a branch under an existing branch name.
-- **Propose, don't merge.** Branch creation, PRs, and merges are always proposed
-  to the human and executed on their acceptance; the agent never merges or pushes
-  on its own.
+- **Push freely; offer PRs and merges.** Stage and plan branches are feature
+  branches — the agent creates and **pushes** them without asking. It then
+  **offers** to open the stage PR into the plan branch and to merge it once
+  you've reviewed; it never opens or merges without your OK, never pushes to
+  `main`, and the final PR to `main` is always yours to merge.
 - The strategy is recorded as a frozen decision at bootstrap. Alternatives,
   offered only then: a **single plan branch** with direct commits (sensible for
   infra-style rollouts where the deliverable is applied host state, not repo

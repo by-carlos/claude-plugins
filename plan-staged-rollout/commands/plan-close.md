@@ -43,9 +43,9 @@ Work through these steps **in order**:
    closeout`) and wait for the user's OK before committing, same as any other
    change.
 
-5. **Propose the final PR.** Propose the PR from the plan branch to `main`
-   using the distilled body from step 3. Wait for the user to review and
-   merge — never merge or push unilaterally.
+5. **Propose the final PR.** Push the plan branch, then propose the PR from it
+   to `main` using the distilled body from step 3. Wait for the user to review
+   and merge — never merge into `main` unilaterally.
 
 6. **End announcement.** State explicitly: the plan is **closed**, the final
    PR has been proposed (or opened, if the user acted on it during this
