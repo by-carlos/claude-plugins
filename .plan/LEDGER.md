@@ -14,8 +14,8 @@ and notes block at the end of every session (Operating protocol step 7).
 | S3 `/plan-stages` command | done | yes | 2026-07-08 | plan-stages.md authored as thin wrapper; frontmatter parses, six flow steps in order, references skill/templates |
 | S4 `/plan-run` command | done | yes | 2026-07-08 | plan-run.md authored as thin wrapper; frontmatter parses, six ordered flow steps, defers to project PLAN.md with no protocol copy |
 | S5 `/plan-close` command | done | yes | 2026-07-08 | plan-close.md authored as thin wrapper; frontmatter parses, six ordered flow steps including refusal gate, distillation, and cleanup-with-keep-option |
-| S6 End-to-end dogfood test | todo | — | — | — |
-| SF Plan review | todo | — | — | — |
+| S6 End-to-end dogfood test | done | static | 2026-07-10 | Static command review in lieu of live CLI run; 2 defects found & fixed; live dogfood still owed |
+| SF Plan review | done | yes | 2026-07-10 | Docs reconciled, loose ends catalogued; old command names absent |
 
 ## Notes
 
@@ -268,7 +268,39 @@ PR step. Live behavior (refusal with pending stages) is deferred to S6
 (dogfood), per the stage file's Acceptance note.
 
 ### S6 End-to-end dogfood test
-_(empty)_
+Chicken-and-egg: the plugin was merged to `main` before this stage ran, so the
+commands were never executed live. Done here as a **static** review of the three
+command files against the templates + skill (the defect-hunting half of the
+dogfood), not the live-CLI half.
+
+Two defects found and fixed (commit `a4dc044`):
+- `/plan-stages` committed the scaffold with no branch specified while step 4
+  forbade all branch creation → a literal run lands `.plan/` on `main`, breaking
+  the git model. Fixed: prohibition scoped to stage branches; step 5 proposes the
+  plan branch off `main`. Also clarified `stage-N.md` is copied once per stage.
+- `/plan-run` matched only a numeric stage token, so `SF` (`stage-f-review.md`)
+  was unlaunchable. Fixed: accept `f`; arg hint widened.
+
+Everything else traced clean: protocol deferral to `PLAN.md`, weight/dependency
+gates, resume support, closeout completion-gate, propose-don't-merge discipline.
+
+**Caveat (owed):** live end-to-end verification never ran — install the plugin,
+scaffold a throwaway plan, and run `/plan-stages → /plan-run → /plan-close` for
+real. The commands have still not been executed once. Carried as a follow-up.
 
 ### SF Plan review
-_(empty)_
+Reconciliation:
+- Old command names (`plan-new`/`stage-run`/`stage-plan`): absent from all
+  deliverables (only in this stage file's own acceptance text). Grep clean.
+- The one mid-build frozen-decision amendment (hardened dependency gate: prereq
+  must be `done` AND its PR merged, `git fetch` first) is reflected in the
+  shipped template `PLAN.md`. README/PLAN agree.
+- Roadmap deferred items neither silently built nor dropped.
+
+Loose ends catalogued:
+- **Live CLI dogfood** (from S6) → follow-up / spin-off: run the commands
+  end-to-end before relying on them in anger.
+- Machine path (`C:\GitHub\linux\.plan`) and personal name in this `.plan/` →
+  fixed at scrub (commit `c657c86`).
+- `.plan/` shipped on `main` because closeout never ran → resolved by this
+  closeout (removed as the final commit).
