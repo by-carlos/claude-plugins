@@ -1,0 +1,31 @@
+name: Bug report
+description: Something in a plugin isn't working as expected.
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: plugin
+    attributes:
+      label: Plugin
+      description: Which plugin is affected?
+      options:
+        - plan-staged-rollout
+        - marketplace / install
+        - other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+      placeholder: Steps to reproduce, expected vs. actual behavior.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Environment
+      description: Claude Code version and OS.
+      placeholder: "e.g. Claude Code 2.x on macOS 15"
+    validations:
+      required: false
