@@ -1,7 +1,8 @@
 {
   "name": "carlos-plugins",
+  "description": "Carlos Eng's Claude Code plugins — workflow tooling for agentic coding.",
   "owner": {
-    "name": "Carlos"
+    "name": "Carlos Eng"
   },
   "plugins": [
     {
