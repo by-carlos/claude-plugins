@@ -7,10 +7,13 @@ stage in its own fresh session, tracks progress in an evidence-based ledger,
 and keeps every decision in exactly one place so the plan never drifts.
 
 ```
-/plan-stages <idea>  →  design + decompose into .plan/ (once)
-/plan-run 3          →  execute one stage in a fresh, cheap session (repeat)
-/plan-close          →  final PR, cleanup, done
+/plan-staged-rollout:plan-stages <idea>  →  design + decompose into .plan/ (once)
+/plan-staged-rollout:plan-run 3          →  execute one stage in a fresh, cheap session (repeat)
+/plan-staged-rollout:plan-close          →  final PR, cleanup, done
 ```
+
+Each is also model-invocable in natural language once installed — e.g. "run
+stage 3 of the plan" — the slash form above is the explicit fallback.
 
 ## Install
 
@@ -21,9 +24,9 @@ From within Claude Code:
 /plugin install plan-staged-rollout@carlos-plugins
 ```
 
-Installed plugin commands are namespaced — `/plan-stages` is invoked as
-`/plan-staged-rollout:plan-stages` (likewise `plan-run` and `plan-close`).
-This README uses the short names for readability.
+Installed plugin commands are namespaced — see the quickstart above for the
+exact commands to type. The rest of this README uses the short names
+(`plan-stages`, `plan-run`, `plan-close`) for readability.
 
 ---
 
@@ -142,7 +145,8 @@ The session follows the operating protocol in `PLAN.md`:
 **Subtasks and interruption.** Stage steps are checkboxes. If a session must
 stop mid-stage (blocked, context getting long, you interrupt), it marks the
 stage `doing`, ticks the completed boxes, and writes a handoff note.
-Re-running `/plan-run <N>` resumes from the unticked boxes.
+Re-running `/plan-staged-rollout:plan-run <N>` (or asking to "run stage \<N>
+of the plan" again) resumes from the unticked boxes.
 
 **Statuses:** `todo → doing → done`, plus `blocked` (waiting on a human or an
 external gate — the stage becomes a runbook with exact steps for you) and
@@ -176,8 +180,9 @@ plan-<slug> → final PR → main       ← at /plan-close
 
 ### 4. Review — the standing final stage
 
-Bootstrap always appends `SF: plan review` (run with `/plan-run f`). It is
-the one stage exempt
+Bootstrap always appends `SF: plan review` (run with
+`/plan-staged-rollout:plan-run f`, or by asking to "run the review stage").
+It is the one stage exempt
 from the read-scope rule: it reads the *entire* ledger — every note, gotcha,
 shortcut, and known gap accumulated across all stages — and sweeps for
 stragglers. Crucially, **it catalogs; it never implements.** Each finding
@@ -186,11 +191,12 @@ becomes exactly one of:
 - **A new stage in this plan** — for follow-up work that belongs to this
   project (a shortcut to reconcile, a config to bring under management). It
   gets a ledger row and a stage file, and runs later as a normal
-  `/plan-run <N>` in its own fresh session and branch, like any other stage.
+  `/plan-staged-rollout:plan-run <N>` in its own fresh session and branch,
+  like any other stage.
 - **A spin-off candidate** — for work that has outgrown this plan (a genuinely
   new project). It's recorded in the ledger and surfaced in the final PR body
   as follow-up work; it does not block closeout. Start it later with its own
-  `/plan-stages`.
+  `/plan-staged-rollout:plan-stages`.
 - **An explicit "accepted, won't fix"** — with a one-line reason, so the gap
   is a decision instead of a surprise.
 

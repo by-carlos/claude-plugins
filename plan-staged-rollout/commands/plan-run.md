@@ -16,7 +16,8 @@ Stage to run: **$ARGUMENTS**
 Work through these steps **in order**:
 
 1. **Locate `.plan/`.** Find the `.plan/` directory at the repo root. If none
-   exists, stop and tell the user to bootstrap one with `/plan-stages <idea>`.
+   exists, stop and tell the user to bootstrap one — "bootstrap a plan for
+   \<idea>", or the explicit command `/plan-staged-rollout:plan-stages <idea>`.
    Then resolve `$ARGUMENTS` to the stage file `.plan/stage-<N>-<slug>.md` by
    matching the leading `stage-<$ARGUMENTS>-` token — a digit for an
    implementation stage, or `f` for the final review stage
@@ -52,8 +53,11 @@ Work through these steps **in order**:
    - The stage's outcome: **finished**, or `blocked`/`doing` — and if not
      finished, exactly what remains (which checkboxes, what it's waiting on).
    - The **next runnable stage**: the first `todo` stage whose `depends` are all
-     `done`. Give the exact command — **`/plan-run <N>`** — and its recommended
-     **model and effort** from the stage index, to be run in a fresh session.
+     `done`. Tell the user to continue in a fresh session with **"run stage
+     \<N> of the plan"** — or the explicit command
+     **`/plan-staged-rollout:plan-run <N>`** — and state its recommended
+     **model and effort** from the stage index.
    - If no stages remain runnable (all `done`/`skipped`), point the user at
-     **`/plan-close`** instead.
+     closeout — **"close out the plan"** or **`/plan-staged-rollout:plan-close`**
+     — instead.
    Then stop.

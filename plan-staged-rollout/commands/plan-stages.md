@@ -50,8 +50,8 @@ Then work through these steps **in order**:
    Offer the alternatives: **single plan branch** (direct commits — infra-style
    rollouts) or **trunk**. Record the choice as a **frozen decision** in
    `PLAN.md`. Do **not** create any *stage* branch here — stage branches
-   (`plan-<slug>-s<N>`) are proposed and created at stage time by `/plan-run`,
-   never at bootstrap.
+   (`plan-<slug>-s<N>`) are proposed and created at stage time by
+   `/plan-staged-rollout:plan-run`, never at bootstrap.
 
 5. **Scaffold and commit.** Copy the four templates into `<repo>/.plan/`, copying
    `stage-N.md` **once per stage** and renaming each to `stage-<N>-<slug>.md`,
@@ -64,6 +64,7 @@ Then work through these steps **in order**:
    wait for the user's OK — do not create the branch or commit unilaterally.
 
 6. **End announcement.** State explicitly that **bootstrap is finished and no
-   stage was executed.** Tell the user their next action is **`/plan-run 0`** in
-   a **fresh session**, and state **S0's recommended model and effort** from the
-   stage index. Then stop.
+   stage was executed.** Tell the user their next action, in a **fresh
+   session**, is **"run stage 0 of the plan"** — or the explicit command
+   **`/plan-staged-rollout:plan-run 0`** — and state **S0's recommended model
+   and effort** from the stage index. Then stop.
