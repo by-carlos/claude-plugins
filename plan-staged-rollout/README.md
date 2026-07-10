@@ -12,6 +12,19 @@ and keeps every decision in exactly one place so the plan never drifts.
 /plan-close          →  final PR, cleanup, done
 ```
 
+## Install
+
+From within Claude Code:
+
+```
+/plugin marketplace add by-carlos/claude-plugins
+/plugin install plan-staged-rollout@carlos-plugins
+```
+
+Installed plugin commands are namespaced — `/plan-stages` is invoked as
+`/plan-staged-rollout:plan-stages` (likewise `plan-run` and `plan-close`).
+This README uses the short names for readability.
+
 ---
 
 ## The problem
@@ -163,7 +176,8 @@ plan-<slug> → final PR → main       ← at /plan-close
 
 ### 4. Review — the standing final stage
 
-Bootstrap always appends `S-final: plan review`. It is the one stage exempt
+Bootstrap always appends `SF: plan review` (run with `/plan-run f`). It is
+the one stage exempt
 from the read-scope rule: it reads the *entire* ledger — every note, gotcha,
 shortcut, and known gap accumulated across all stages — and sweeps for
 stragglers. Crucially, **it catalogs; it never implements.** Each finding
@@ -294,11 +308,13 @@ earlier stage's assumptions were written down.
 
 ## Status
 
-**Design phase.** This README is the method and design document; the skill,
-commands, and templates are the next deliverable. Their implementation is
-tracked in this repo's own `.plan/` — the method dogfooding itself.
+**Shipped** (v0.1.0). This README is the method document; the skill, the three
+commands, and the templates are implemented. They were built with the method
+itself — decomposed into a `.plan/` and executed stage by stage in this repo
+(the plan folder was removed at closeout, as the method prescribes; its full
+history is in git).
 
-Planned layout:
+Layout:
 
 ```
 plan-staged-rollout/
