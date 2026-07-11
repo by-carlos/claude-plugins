@@ -14,14 +14,18 @@ Work through these steps **in order**:
 
 1. **Locate `.plan/`.** Find the `.plan/` directory at the repo root. If none
    exists, stop and tell the user there is nothing to close (or that they may
-   want `/plan-stages <idea>` if they meant to start one).
+   want to bootstrap one — "bootstrap a plan for \<idea>", or the explicit
+   command `/plan-staged-rollout:plan-stages <idea>` — if they meant to start
+   one).
 
 2. **Completion gate.** Read `.plan/LEDGER.md`'s status table. Every row must
    be `done` or `skipped` — this includes any stages the final review stage
    (`SF`) spawned. If any row is `todo`, `doing`, or `blocked`, **refuse to
    run**: list exactly which stages are pending, their status, and what to run
-   instead (`/plan-run <N>` for `todo`/`doing`, or resolve the `blocked`
-   runbook first). Stop there — do not proceed to distillation or cleanup.
+   instead — "run stage \<N> of the plan", or the explicit command
+   `/plan-staged-rollout:plan-run <N>`, for `todo`/`doing`, or resolve the
+   `blocked` runbook first. Stop there — do not proceed to distillation or
+   cleanup.
 
 3. **Distill the story.** Read `.plan/PLAN.md` (architecture, frozen
    decisions) and the full `.plan/LEDGER.md` (status table + every notes

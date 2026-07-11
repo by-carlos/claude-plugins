@@ -13,10 +13,11 @@ Start a **fresh** session and paste one line:
 
 That's the whole prompt — the stage file points the session at the shared
 protocol and frozen decisions in `PLAN.md`. If this repo has the
-`plan-staged-rollout` plugin installed, `/plan-run <N>` is the same thing with
-ergonomics (it also runs the model/effort weight check for you). The `.plan/`
-folder works standalone either way; the plugin is convenience, not a
-dependency.
+`plan-staged-rollout` plugin installed, asking to **"run stage \<N> of the
+plan"** — or the explicit command `/plan-staged-rollout:plan-run <N>` — is
+the same thing with ergonomics (it also runs the model/effort weight check
+for you). The `.plan/` folder works standalone either way; the plugin is
+convenience, not a dependency.
 
 Run stages in any order allowed by their `depends`. The next runnable stage is
 the first `todo` row in `LEDGER.md` whose dependencies are all `done`.
@@ -51,7 +52,9 @@ pushes to `main`. <If you chose a non-default git strategy at bootstrap
 
 ## Closeout
 
-When every ledger row is `done` or `skipped`, run `/plan-close` (or follow the
-closeout steps in `PLAN.md`): it distills `PLAN.md` + the ledger into the final
-PR body, deletes `.plan/` as the last commit (keeping it is an option), and
-proposes the PR from `plan-<slug>` to `main`.
+When every ledger row is `done` or `skipped`, close out the plan — ask to
+**"close out the plan"**, run the explicit command
+`/plan-staged-rollout:plan-close`, or follow the closeout steps in `PLAN.md`
+directly: it distills `PLAN.md` + the ledger into the final PR body, deletes
+`.plan/` as the last commit (keeping it is an option), and proposes the PR
+from `plan-<slug>` to `main`.
