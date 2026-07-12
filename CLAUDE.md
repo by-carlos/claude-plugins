@@ -18,3 +18,23 @@ Project instructions for agentic coding in this repository.
   [plan-staged-rollout/skills/staged-rollout/SKILL.md](plan-staged-rollout/skills/staged-rollout/SKILL.md).
 - Merging is never unilateral: propose the merge and wait for the maintainer's OK.
   Never push directly to `main`.
+
+## Releasing
+
+- **`main` is live distribution.** The marketplace source tracks the branch, not a
+  tag — so anything merged to `main` reaches any user who refreshes the marketplace
+  (`/plugin marketplace update`), regardless of version bump or GitHub release. A
+  release is a human-facing label, not the delivery mechanism. Keep `main` releasable.
+- **Changelog as-you-go, under `## [Unreleased]`.** Add entries to `CHANGELOG.md`
+  under an `## [Unreleased]` heading as changes land. This records *what* changed
+  without declaring a version. Never write a dated/versioned heading or bump
+  `plugin.json` mid-batch — that recreates version drift.
+- **A release is one atomic change**, done all together (own commit/PR):
+  1. Bump `version` in the affected plugin's `.claude-plugin/plugin.json` (semver).
+  2. Rename `## [Unreleased]` → `## [x.y.z] — YYYY-MM-DD` and add the
+     `[x.y.z]: …/releases/tag/vx.y.z` link at the bottom.
+  3. Tag `vx.y.z` and cut the matching GitHub release.
+- **Semver:** a `feat` in the batch ⇒ **minor** bump; only `fix`/`docs`/`chore` ⇒
+  **patch**. Pre-1.0, breaking changes go in a minor.
+- **Tag per released version** (not per commit, not major-only) — the `CHANGELOG.md`
+  release links assume a tag exists for each version. Keep the two consistent.
