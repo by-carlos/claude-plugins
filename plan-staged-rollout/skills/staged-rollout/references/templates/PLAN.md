@@ -33,7 +33,9 @@ stage (Operating protocol, finish step 3).
   the end). The agent creates and pushes stage and plan branches without
   asking, and **opens** the stage PR as a compulsory part of finishing a
   stage — never merging without your OK, never pushing to `main`. A stage
-  cannot be marked `done` until its PR is merged into the plan branch.
+  cannot be marked `done` until its PR is merged into the plan branch; the
+  `done` edit itself is committed on the plan branch *after* the merge
+  (Operating protocol, finish step 5), never on the stage branch.
 - **Final review stage:** the last stage (`SF`) is a standing plan review. It
   catalogs loose ends — each becomes a new in-plan stage, a spin-off
   candidate, or an explicit "accepted, won't fix" — and NEVER implements.
@@ -55,6 +57,36 @@ model. Escalate only where a stage has genuine open design questions
 
 ## Operating protocol (every stage session)
 
+0. **Preflight & sync (required):** run this before reading any status or
+   touching any branch. The ledger is canonical but may only be trusted
+   *after* it passes — git state inherited from a previous session, a remote
+   merge, or a crash is verified here, never assumed.
+   1. **Fetch:** `git fetch origin`.
+   2. **Sync the plan branch:** fast-forward local `plan-<slug>` to
+      `origin/plan-<slug>` — `git merge --ff-only origin/plan-<slug>` when it
+      is checked out, `git fetch origin plan-<slug>:plan-<slug>` otherwise
+      (both refuse non-fast-forward updates). This holds under both remote
+      squash-merge and merge-commit: either way the remote plan branch only
+      moves forward. If it won't fast-forward, the branch has diverged — stop
+      and report.
+   3. **Verify the tree:** clean working tree required. If dirty, stop and
+      list exactly what is uncommitted — never auto-stash.
+   4. **Verify position:** HEAD must be on the plan branch (fresh stage) or
+      on the stage branch being resumed. Detached HEAD or any other branch →
+      stop and report.
+   5. **Reconcile ledger vs reality:** cross-check the `LEDGER.md` status
+      table against actual branch and PR state (`gh pr list --base
+      plan-<slug> --state all`, `git branch -a --no-merged plan-<slug>`).
+      One mismatch is self-healing: a `doing` row whose stage PR is already
+      merged means the merge happened remotely — complete the finish
+      protocol's post-merge bookkeeping (finish step 5) by recording the row
+      `done` on the plan branch. Every other mismatch is drift — report each
+      one and stop: a `done` row with an open or unmerged stage PR; a `todo`
+      row with an existing stage branch that has commits (crashed session);
+      an open stage PR based on `main` instead of `plan-<slug>`.
+   6. **Report, don't repair:** on anything preflight can't fast-forward or
+      reconcile, stop with an accurate report of the state and what would fix
+      it — no auto-stash, no reset, no branch deletion.
 1. **Read only:** this file + the target stage file + the `LEDGER.md` status
    table + the notes blocks of the stages this one `depends` on + any docs the
    stage file names. Do NOT scan the rest of the repo. (Exception: the final
@@ -73,10 +105,11 @@ model. Escalate only where a stage has genuine open design questions
    hold. A `done` ledger row alone is not enough: a stage branched off the
    plan branch before a prerequisite's PR is merged will silently lack that
    prerequisite's work. If either isn't true, stop and say so.
-4. **Branch:** first make sure the local plan branch is up to date
-   (`git fetch` + fast-forward), then create `plan-<slug>-s<N>` from
-   `plan-<slug>` (or use it if the human already made it). Work
-   happens on the stage branch.
+4. **Branch:** create `plan-<slug>-s<N>` from `plan-<slug>` — preflight
+   step 2 already brought it up to date (or use the stage branch if the human
+   already made it). Work happens on the stage branch. **Redo:** re-running a
+   `done` stage cuts a fresh `plan-<slug>-s<N>-redo-<K>` branch from the
+   current plan branch tip — never reuse a merged stage branch.
 5. **Honor `mode` / `exec`:**
    - `mode: direct` → state a one-line plan, then implement.
    - `mode: brainstorm` → run a design pass scoped to THIS stage first,
@@ -91,17 +124,30 @@ model. Escalate only where a stage has genuine open design questions
 7. **Finish protocol (required):**
    1. Run the stage's **Acceptance** checks; paste the real output into the
       stage's notes block in `LEDGER.md`.
-   2. Update the stage's table row: status, absolute date, verified yes/no,
-      one-line result. Detail goes in the notes block, never the table.
+   2. Update the stage's table row: absolute date, verified yes/no, one-line
+      result — but the status stays `doing` here. `done` is recorded only
+      after the PR merges (step 5 below), so a `done` row is always visible
+      from a synced plan branch. Detail goes in the notes block, never the
+      table.
    3. If a decision changed or was added, amend **Frozen decisions in this
       file** — nowhere else.
    4. Commit on the stage branch throughout the stage at logical units
       (conventional messages) — not one commit at the end. Push the branch
-      and **open the PR** into `plan-<slug>` (compulsory, not offered); then
-      **offer** to merge it once reviewed — never merge on your own. Stage PRs
-      are **squash-merged** (one commit per stage on the plan branch), and the
-      merged stage branch is deleted. The stage cannot be marked `done` until
-      this PR is merged.
-   5. Announce: this stage is **finished**; the next runnable stage (the first
+      and **open the PR** into `plan-<slug>` (compulsory, not offered),
+      pinning the base explicitly — `gh pr create --base plan-<slug>` — never
+      relying on the default, which falls back to the repo's default branch
+      (`main`). Then **offer** to merge it once reviewed — never merge on
+      your own. Stage PRs are **squash-merged** (one commit per stage on the
+      plan branch), and the merged stage branch is deleted. The stage cannot
+      be marked `done` until this PR is merged.
+   5. **After the merge:** check out `plan-<slug>` and fast-forward it
+      (`git fetch origin` + `git merge --ff-only origin/plan-<slug>`), then
+      flip the stage's row to `done` as a direct commit on the plan branch
+      and push. The `done` edit lives on the plan branch, after the merge —
+      never on the stage branch. If the merge doesn't happen this session,
+      leave the row `doing` and end anyway; the next session's preflight
+      (step 0.5) completes this bookkeeping when it finds the merged PR.
+      End the session with HEAD on the plan branch.
+   6. Announce: this stage is **finished**; the next runnable stage (the first
       `todo` whose `depends` are all `done`), the exact prompt/command to run
       it, and its recommended model/effort. Then stop.

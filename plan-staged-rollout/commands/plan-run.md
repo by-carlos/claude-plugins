@@ -15,8 +15,13 @@ Stage to run: **$ARGUMENTS**
 
 Work through these steps **in order**:
 
-1. **Locate `.plan/`.** Find the `.plan/` directory at the repo root. If none
-   exists, stop and tell the user to bootstrap one — "bootstrap a plan for
+1. **Locate `.plan/`.** Find the `.plan/` directory at the repo root. If it
+   is absent from the working tree, do **not** conclude there is no plan —
+   you may simply be on `main` while the plan lives on its branch. Run
+   `git fetch origin`, then look for `plan-*` branches: local first, then
+   remote. If a plan branch exists, offer to check it out (that makes
+   `.plan/` appear) and continue from there. Only when no plan branch exists
+   anywhere, stop and tell the user to bootstrap one — "bootstrap a plan for
    \<idea>", or the explicit command `/plan-staged-rollout:plan-stages <idea>`.
    Then resolve `$ARGUMENTS` to the stage file `.plan/stage-<N>-<slug>.md` by
    matching the leading `stage-<$ARGUMENTS>-` token — a digit for an
@@ -25,7 +30,10 @@ Work through these steps **in order**:
    do exist so the user can pick a valid one.
 
 2. **Defer to the project protocol.** Read `.plan/PLAN.md` and follow its
-   **Operating protocol** verbatim for this stage — read-scope, dependency gate,
+   **Operating protocol** verbatim for this stage — starting with its
+   **Preflight & sync** block (protocol step 0) before reading any status or
+   touching any branch; the ledger may only be trusted after it passes.
+   Read-scope, dependency gate,
    `mode`/`exec` handling, scope discipline, and the finish protocol all come
    from that file, not from this command. `PLAN.md` is the single source of
    truth; this wrapper never overrides it.
@@ -51,7 +59,9 @@ Work through these steps **in order**:
    it is already `doing`, this is a resume: pick up from the **unticked**
    checkboxes in the stage file's Steps and honor the handoff note in the
    stage's ledger notes block. If it is `done`, confirm with the user before
-   redoing anything. Otherwise run it fresh.
+   redoing anything — a redo follows the protocol's redo rule (a fresh
+   `-redo-<K>` branch from the plan branch tip, never the merged stage
+   branch). Otherwise run it fresh.
 
 6. **End announcement.** When you stop, state explicitly:
    - The stage's outcome: **finished**, or `blocked`/`doing` — and if not
