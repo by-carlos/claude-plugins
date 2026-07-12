@@ -25,8 +25,10 @@ stage (Operating protocol, finish step 3).
 - **Git strategy:** branch-per-stage (fixed — the only supported model).
   `main` → `plan-<slug>` (the plan branch; `.plan/` lives here) → one branch
   per stage `plan-<slug>-s<N>` (flat names — git refs can't nest a branch
-  under an existing branch), each landing as a PR into `plan-<slug>`; final PR
-  `plan-<slug>` → `main` at closeout. Commits on a stage branch are compulsory
+  under an existing branch), each landing as a **squash-merged** PR into
+  `plan-<slug>`; final PR `plan-<slug>` → `main` at closeout is a **normal
+  (non-squash) merge** so each stage keeps its own commit on `main`. Commits on
+  a stage branch are compulsory
   and incremental (logical units as the stage progresses, not one commit at
   the end). The agent creates and pushes stage and plan branches without
   asking, and **opens** the stage PR as a compulsory part of finishing a
@@ -93,8 +95,10 @@ model. Escalate only where a stage has genuine open design questions
    4. Commit on the stage branch throughout the stage at logical units
       (conventional messages) — not one commit at the end. Push the branch
       and **open the PR** into `plan-<slug>` (compulsory, not offered); then
-      **offer** to merge it once reviewed — never merge on your own. The
-      stage cannot be marked `done` until this PR is merged.
+      **offer** to merge it once reviewed — never merge on your own. Stage PRs
+      are **squash-merged** (one commit per stage on the plan branch), and the
+      merged stage branch is deleted. The stage cannot be marked `done` until
+      this PR is merged.
    5. Announce: this stage is **finished**; the next runnable stage (the first
       `todo` whose `depends` are all `done`), the exact prompt/command to run
       it, and its recommended model/effort. Then stop.

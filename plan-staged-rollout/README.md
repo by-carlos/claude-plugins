@@ -78,7 +78,7 @@ stop and resume whenever you have time.
 | **Token reduction** | Fresh session per stage: cost per stage is `O(PLAN.md + stage file + ledger table)`, flat no matter how many stages preceded it. No compaction spiral. |
 | **Tracking** | Ledger with fixed statuses and pasted acceptance evidence. "Where were we?" is a 10-line table, not a transcript. |
 | **Control** | Sessions stop at stage boundaries. You choose pace and order; PR-per-stage gives you an acceptance gate on every unit. Human-gated work becomes an explicit `blocked` + runbook, never faked progress. |
-| **Versioning / undo** | `main → plan-<slug> → plan-<slug>-s<N>`. Undo the last stage = discard its branch. The final PR to `main` is one reviewed, distilled unit. |
+| **Versioning / undo** | `main → plan-<slug> → plan-<slug>-s<N>`. Undo the last stage = discard its branch. Stage PRs squash-merge into the plan branch; the final PR merges into `main` with a merge commit, so `main` gets one clean commit per stage while `git log --first-parent main` stays one merge per project. |
 
 ---
 
@@ -175,6 +175,15 @@ plan-<slug> → final PR → main       ← at /plan-close
   branch as a compulsory part of finishing a stage. Merges are **offered** and
   happen only on your OK — it never merges on its own, and never pushes to
   `main`. A stage cannot be marked `done` until its PR is merged.
+- Merge type is fixed by position: stage PRs into the plan branch are
+  **squash-merged** (one commit per stage, merged branch deleted); the final PR
+  from the plan branch into `main` is a **normal (non-squash) merge**, so each
+  stage lands on `main` as its own distinct commit.
+- **Repo settings prerequisite:** the GitHub repo must allow both squash
+  merging and merge commits. Recommended defaults: squash message = "Pull
+  request title and commit details"; merge-commit message = "Pull request
+  title and description" (so the distilled final-PR body lands in the merge
+  commit on `main`).
 - Branch-per-stage is the only supported model — it is recorded as a frozen
   decision at bootstrap, not a choice offered at that time.
 
