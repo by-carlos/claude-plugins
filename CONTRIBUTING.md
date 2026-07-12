@@ -16,6 +16,26 @@ marketplace, so the workflow is deliberately lightweight.
 
 The maintainer ([Carlos Eng](https://github.com/by-carlos)) reviews and merges all PRs.
 
+## Validation
+
+A GitHub Actions workflow (`.github/workflows/validate.yml`) runs on every PR and on
+pushes to `main`. It runs `scripts/validate_plugins.py`, which checks that:
+
+- `.claude-plugin/marketplace.json` and each plugin's `.claude-plugin/plugin.json`
+  parse as JSON, and every marketplace `source` path exists.
+- `commands/*.md` have a `description` and `skills/*/SKILL.md` have `name` and
+  `description` in their frontmatter.
+- The templates referenced by each `SKILL.md` (`PLAN.md`, `LEDGER.md`, `stage-N.md`,
+  `README.md`) exist under `references/templates/`.
+- Relative links in `README.md` files resolve.
+
+The script is stdlib-only Python (no external dependencies). Run it locally before
+pushing:
+
+```
+python3 scripts/validate_plugins.py
+```
+
 ## Ground rules
 
 - Match the existing style and structure of the plugin you're touching.
