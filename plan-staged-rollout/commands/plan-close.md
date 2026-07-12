@@ -48,8 +48,11 @@ Work through these steps **in order**:
    change.
 
 5. **Propose the final PR.** Push the plan branch, then propose the PR from it
-   to `main` using the distilled body from step 3. Wait for the user to review
-   and merge — never merge into `main` unilaterally.
+   to `main` using the distilled body from step 3. Unlike the per-stage PRs
+   (which are squash-merged), this final PR is a **normal (non-squash) merge**,
+   so each stage's squashed commit lands on `main` as its own distinct commit
+   and the as-built history survives. Wait for the user to review and merge —
+   never merge into `main` unilaterally.
 
 6. **End announcement.** State explicitly: the plan is **closed**, the final
    PR has been proposed (or opened, if the user acted on it during this

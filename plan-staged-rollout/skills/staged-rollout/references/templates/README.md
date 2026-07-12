@@ -51,7 +51,12 @@ creation and pushes are autonomous on feature branches — the agent creates
 and pushes stage/plan branches without asking, and opens the stage PR as a
 compulsory part of finishing a stage; merges are offered and happen only on
 your OK, and it never pushes to `main`. A stage cannot be marked `done` until
-its PR is merged into the plan branch.
+its PR is merged into the plan branch. Stage PRs are squash-merged into the
+plan branch; the final PR from the plan branch into `main` is a normal
+(non-squash) merge, so each stage keeps its own commit on `main`. This needs
+the GitHub repo to allow both squash merging and merge commits (recommended:
+squash message = "Pull request title and commit details", merge-commit
+message = "Pull request title and description").
 
 ## Closeout
 

@@ -48,13 +48,17 @@ Then work through these steps **in order**:
    `PLAN.md`: **branch-per-stage** — `main` → `plan-<slug>` (the plan branch)
    → one `plan-<slug>-s<N>` branch and PR per stage, no exceptions, final PR
    to `main` at closeout. It is the only supported model — do not ask the
-   user to choose. Five frozen semantics: (1) one branch per stage, cut from
+   user to choose. Six frozen semantics: (1) one branch per stage, cut from
    the plan branch; (2) commits are compulsory and incremental — commit at
    logical units as the stage progresses, not once at the end; (3) a stage PR
    into the plan branch is compulsory — the finish protocol creates it, it is
    not offered; (4) a stage cannot be marked `done` until its PR is merged
    into the plan branch; (5) after the merge, check out the plan branch and
-   fast-forward before the session ends. Do **not** create any *stage* branch
+   fast-forward before the session ends; (6) merge type is fixed by position —
+   stage PRs are **squash-merged** into the plan branch (merged branch
+   deleted), and the final PR from the plan branch into `main` is a **normal
+   (non-squash) merge** so each stage keeps its own commit on `main`. Do
+   **not** create any *stage* branch
    here — stage branches (`plan-<slug>-s<N>`) are proposed and created at
    stage time by `/plan-staged-rollout:plan-run`, never at bootstrap.
 

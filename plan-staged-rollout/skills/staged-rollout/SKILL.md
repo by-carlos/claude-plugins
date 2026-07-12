@@ -113,13 +113,13 @@ was built with, and there is no alternative to choose at bootstrap:
 ```
 main
  └── plan-<slug>                      ← plan branch; .plan/ lives here
-      ├── plan-<slug>-s0 → PR → plan-<slug>
-      ├── plan-<slug>-s1 → PR → plan-<slug>
+      ├── plan-<slug>-s0 → PR → plan-<slug>   (squash merge)
+      ├── plan-<slug>-s1 → PR → plan-<slug>   (squash merge)
       └── ...
-plan-<slug> → final PR → main         ← at closeout
+plan-<slug> → final PR → main         ← at closeout (normal merge)
 ```
 
-Five frozen semantics:
+Six frozen semantics:
 
 1. **One branch per stage**, cut from the plan branch (`plan-<slug>`) — no
    exceptions. Uniformity keeps each unit reviewable in isolation and contains
@@ -133,6 +133,11 @@ Five frozen semantics:
    the plan branch.
 5. **After the merge, check out the plan branch and fast-forward** before the
    session ends.
+6. **Merge type is fixed by position:** each stage PR is **squash-merged** into
+   the plan branch (one clean commit per stage, no intra-stage churn on the plan
+   branch); the final PR from the plan branch into `main` is a **normal
+   (non-squash) merge**, so every stage lands on `main` as its own distinct
+   commit and the as-built history survives.
 
 Also: **flat branch names** (`plan-<slug>-s3`, not `plan/<slug>/s3`) — git
 refs can't nest a branch under an existing branch name. And **push freely,
