@@ -4,6 +4,24 @@ All notable changes to this marketplace are documented here. The format is based
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the `plan-staged-rollout`
 plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+- **`plan-staged-rollout`:** stage sessions and closeout now run a **Preflight & sync**
+  block (defined once in the template `PLAN.md`'s operating protocol) before trusting
+  the ledger — fetch, fast-forward the plan branch, clean-tree and HEAD-position
+  checks, and a ledger-vs-reality reconcile that reports and stops on drift instead of
+  auto-repairing (#4; instances #3, #6, #16, #17, #19).
+- **`plan-staged-rollout`:** `/plan-run` and `/plan-close` locate the plan via
+  `plan-*` branches when `.plan/` is not in the working tree, instead of advising a
+  second bootstrap (#3); `/plan-close`'s completion gate also fails on open or
+  unmerged stage PRs (#6).
+- **`plan-staged-rollout`:** stage PRs pin their base to the plan branch
+  (`gh pr create --base plan-<slug>`) (#17); the ledger `done` edit moves to the plan
+  branch after the stage PR merges (#19); redo of a `done` stage cuts a fresh
+  `-redo-<K>` branch from the plan branch tip.
+
 ## [0.1.0] — 2026-07-10
 
 Initial public release of the `carlos-plugins` marketplace.

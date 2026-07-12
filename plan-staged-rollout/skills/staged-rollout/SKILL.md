@@ -151,7 +151,9 @@ Six frozen semantics:
 4. **A stage cannot be closed (marked `done`) until its PR is merged** into
    the plan branch.
 5. **After the merge, check out the plan branch and fast-forward** before the
-   session ends.
+   session ends — and record the stage `done` in the ledger there: the `done`
+   edit is committed on the plan branch after the merge, never on the stage
+   branch, so a `done` row is always visible from a synced plan branch.
 6. **Merge type is fixed by position:** each stage PR is **squash-merged** into
    the plan branch (one clean commit per stage, no intra-stage churn on the plan
    branch); the final PR from the plan branch into `main` is a **normal
@@ -165,6 +167,17 @@ creates and **pushes** them without asking, and **opens** the stage PR into
 the plan branch as part of the compulsory finish protocol, but **offers** the
 merge for your OK — it never merges without your OK, never pushes to `main`,
 and the final PR to `main` is always yours to merge.
+
+**Preflight & sync — verify git state before trusting the ledger.** The
+ledger is canonical, but only after it's proven fresh: every stage session
+and the closeout start with a preflight block, defined once in the template
+`PLAN.md`'s operating protocol — fetch, fast-forward the plan branch (holds
+under both squash-merge and merge-commit remotes), require a clean tree and
+a sane HEAD position, and reconcile the ledger rows against actual branch
+and PR state. One state is self-healing (a `doing` row whose PR merged
+remotely gets its `done` recorded); everything else is drift, and the
+preflight **reports and stops** — it never auto-stashes, resets, or deletes
+branches.
 
 ## The final review stage
 
@@ -188,7 +201,9 @@ explicitly closed.
 ## Closeout
 
 Closeout refuses to run until every ledger row is `done` or `skipped` (including
-stages the review spawned). Then it: distills `PLAN.md` + the ledger into the
+stages the review spawned) **and** no stage PR into the plan branch remains
+open or unmerged — a `done` row alone is not enough; the preflight's
+reconcile runs first and treats that mismatch as a gate failure. Then it: distills `PLAN.md` + the ledger into the
 final PR body so the *why* and the as-built story survive on `main`; deletes
 `.plan/` as the last commit on the plan branch (nothing is lost — the full plan
 history remains in git; keeping `.plan/` is an offered option where the plan

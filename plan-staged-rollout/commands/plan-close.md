@@ -12,20 +12,31 @@ repo or git log — distill it from those two files.
 
 Work through these steps **in order**:
 
-1. **Locate `.plan/`.** Find the `.plan/` directory at the repo root. If none
-   exists, stop and tell the user there is nothing to close (or that they may
-   want to bootstrap one — "bootstrap a plan for \<idea>", or the explicit
-   command `/plan-staged-rollout:plan-stages <idea>` — if they meant to start
-   one).
+1. **Locate `.plan/`.** Find the `.plan/` directory at the repo root. If it
+   is absent from the working tree, do **not** conclude there is no plan —
+   you may simply be on `main` while the plan lives on its branch. Run
+   `git fetch origin`, then look for `plan-*` branches: local first, then
+   remote. If a plan branch exists, offer to check it out (that makes
+   `.plan/` appear) and continue from there. Only when no plan branch exists
+   anywhere, stop and tell the user there is nothing to close (or that they
+   may want to bootstrap one — "bootstrap a plan for \<idea>", or the
+   explicit command `/plan-staged-rollout:plan-stages <idea>` — if they meant
+   to start one).
 
-2. **Completion gate.** Read `.plan/LEDGER.md`'s status table. Every row must
-   be `done` or `skipped` — this includes any stages the final review stage
-   (`SF`) spawned. If any row is `todo`, `doing`, or `blocked`, **refuse to
-   run**: list exactly which stages are pending, their status, and what to run
-   instead — "run stage \<N> of the plan", or the explicit command
-   `/plan-staged-rollout:plan-run <N>`, for `todo`/`doing`, or resolve the
-   `blocked` runbook first. Stop there — do not proceed to distillation or
-   cleanup.
+2. **Preflight, then completion gate.** First run `PLAN.md`'s **Preflight &
+   sync** block (Operating protocol, step 0) — the ledger may only be read
+   after the plan branch is synced, and the preflight's reconcile step is
+   part of this gate: a `done` row whose stage PR is still open or unmerged
+   is a gate failure (the work isn't on the plan branch), not a pass. Then
+   read `.plan/LEDGER.md`'s status table. Every row must be `done` or
+   `skipped` — this includes any stages the final review stage (`SF`)
+   spawned — **and** `gh pr list --base plan-<slug> --state open` must show
+   no remaining stage PRs. If any row is `todo`, `doing`, or `blocked`,
+   **refuse to run**: list exactly which stages are pending, their status,
+   and what to run instead — "run stage \<N> of the plan", or the explicit
+   command `/plan-staged-rollout:plan-run <N>`, for `todo`/`doing`, or
+   resolve the `blocked` runbook first. Stop there — do not proceed to
+   distillation or cleanup.
 
 3. **Distill the story.** Read `.plan/PLAN.md` (architecture, frozen
    decisions) and the full `.plan/LEDGER.md` (status table + every notes
