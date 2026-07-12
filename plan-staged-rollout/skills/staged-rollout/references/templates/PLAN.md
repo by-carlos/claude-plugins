@@ -60,10 +60,13 @@ model. Escalate only where a stage has genuine open design questions
    stage file names. Do NOT scan the rest of the repo. (Exception: the final
    review stage reads the *entire* ledger.)
 2. **Weight check:** compare the session's model against the stage's `model`
-   flag (your system prompt states your model); remind the recommended
-   `effort` — effort is NOT introspectable, so never claim to verify it. If
-   the session is lighter than recommended, say so and offer continue/abort
-   before doing anything.
+   flag (your system prompt states your model), checked mechanically against
+   the `staged-rollout` skill's **Model weight tiers** rubric — not a guess
+   about your own weight; remind the recommended `effort` — effort is NOT
+   introspectable, so never claim to verify it. If the session is lighter than
+   recommended, say so and offer continue/abort before doing anything. If the
+   disclosed model doesn't recognizably match a tier in the rubric, don't
+   guess — state the exact model ID/name and ask the user which tier applies.
 3. **Dependency gate:** for every `depends` stage, confirm it is `done` in
    `LEDGER.md` **AND its stage branch/PR is merged into the plan branch**
    (`git fetch` first — the merge may be remote and not yet local). Both must
