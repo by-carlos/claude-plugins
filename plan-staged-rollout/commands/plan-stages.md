@@ -44,22 +44,26 @@ Then work through these steps **in order**:
    warrants it). Then **append the standing `SF: plan review` stage** as the
    last row (it catalogs loose ends and never implements).
 
-4. **Git strategy question.** Ask the user which model to use. **Default:
-   branch-per-stage** — `main` → `plan-<slug>` → one `plan-<slug>-s<N>` branch
-   and PR per stage, no per-stage exceptions, final PR to `main` at closeout.
-   Offer the alternatives: **single plan branch** (direct commits — infra-style
-   rollouts) or **trunk**. Record the choice as a **frozen decision** in
-   `PLAN.md`. Do **not** create any *stage* branch here — stage branches
-   (`plan-<slug>-s<N>`) are proposed and created at stage time by
-   `/plan-staged-rollout:plan-run`, never at bootstrap.
+4. **Git model (fixed, not a question).** Record the frozen git protocol in
+   `PLAN.md`: **branch-per-stage** — `main` → `plan-<slug>` (the plan branch)
+   → one `plan-<slug>-s<N>` branch and PR per stage, no exceptions, final PR
+   to `main` at closeout. It is the only supported model — do not ask the
+   user to choose. Five frozen semantics: (1) one branch per stage, cut from
+   the plan branch; (2) commits are compulsory and incremental — commit at
+   logical units as the stage progresses, not once at the end; (3) a stage PR
+   into the plan branch is compulsory — the finish protocol creates it, it is
+   not offered; (4) a stage cannot be marked `done` until its PR is merged
+   into the plan branch; (5) after the merge, check out the plan branch and
+   fast-forward before the session ends. Do **not** create any *stage* branch
+   here — stage branches (`plan-<slug>-s<N>`) are proposed and created at
+   stage time by `/plan-staged-rollout:plan-run`, never at bootstrap.
 
 5. **Scaffold and commit.** Copy the four templates into `<repo>/.plan/`, copying
    `stage-N.md` **once per stage** and renaming each to `stage-<N>-<slug>.md`,
    and fill every placeholder (frozen decisions, stage index, ledger rows,
-   per-stage files). Then land the scaffold on the plan branch: unless the chosen
-   strategy is **trunk**, **propose creating the plan branch `plan-<slug>` off
-   `main`** and put the scaffold there — `.plan/` lives on the plan branch (for
-   trunk, it stays on the current branch). **Propose the scaffold commit**
+   per-stage files). Then land the scaffold on the plan branch: **propose
+   creating the plan branch `plan-<slug>` off `main`** and put the scaffold
+   there — `.plan/` lives on the plan branch. **Propose the scaffold commit**
    (conventional message, e.g. `chore(plan): scaffold .plan/ for <slug>`) and
    wait for the user's OK — do not create the branch or commit unilaterally.
 

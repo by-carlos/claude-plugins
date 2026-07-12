@@ -171,12 +171,12 @@ plan-<slug> → final PR → main       ← at /plan-close
 - Branch names are flat (`plan-<slug>-s3`, not `plan/<slug>/s3`) because git
   refs can't nest a branch under an existing branch name.
 - Feature-branch plumbing is autonomous: the agent **creates and pushes** stage
-  and plan branches without asking. PRs and merges are **offered** and happen
-  only on your OK — it never merges on its own, and never pushes to `main`.
-- The strategy is recorded as a frozen decision at bootstrap. Alternatives
-  (single plan branch with direct commits — sensible for infra-style rollouts
-  where the deliverable is applied host state rather than repo code — or plain
-  trunk) are available if you ask for them.
+  and plan branches without asking, and **opens the stage PR** into the plan
+  branch as a compulsory part of finishing a stage. Merges are **offered** and
+  happen only on your OK — it never merges on its own, and never pushes to
+  `main`. A stage cannot be marked `done` until its PR is merged.
+- Branch-per-stage is the only supported model — it is recorded as a frozen
+  decision at bootstrap, not a choice offered at that time.
 
 ### 4. Review — the standing final stage
 
