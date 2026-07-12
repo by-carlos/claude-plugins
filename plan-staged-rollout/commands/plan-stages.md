@@ -17,7 +17,7 @@ First, load the method: invoke the **`staged-rollout`** skill (via the Skill
 tool) and follow its decomposition guidance, flag heuristics, and git model.
 The templates to copy live at
 `${CLAUDE_PLUGIN_ROOT}/skills/staged-rollout/references/templates/`
-(`PLAN.md`, `LEDGER.md`, `stage-N.md`, `README.md`).
+(`PLAN.md`, `LEDGER.md`, `stage-N.md`, `stage-f-review.md`, `README.md`).
 
 Then work through these steps **in order**:
 
@@ -42,7 +42,9 @@ Then work through these steps **in order**:
    `depends`, the keystone as **S0**, and deliberately cheap flags (`direct`,
    `inline`, the cheaper capable model — escalate only where a stage genuinely
    warrants it). Then **append the standing `SF: plan review` stage** as the
-   last row (it catalogs loose ends and never implements).
+   last row (it catalogs loose ends and never implements), scaffolded from
+   `stage-f-review.md` — not a copy of `stage-N.md` — since it already bakes
+   in the three-outcome checklist and acceptance check.
 
 4. **Git model (fixed, not a question).** Record the frozen git protocol in
    `PLAN.md`: **branch-per-stage** — `main` → `plan-<slug>` (the plan branch)
@@ -62,10 +64,12 @@ Then work through these steps **in order**:
    here — stage branches (`plan-<slug>-s<N>`) are proposed and created at
    stage time by `/plan-staged-rollout:plan-run`, never at bootstrap.
 
-5. **Scaffold and commit.** Copy the four templates into `<repo>/.plan/`, copying
+5. **Scaffold and commit.** Copy the templates into `<repo>/.plan/`, copying
    `stage-N.md` **once per stage** and renaming each to `stage-<N>-<slug>.md`,
-   and fill every placeholder (frozen decisions, stage index, ledger rows,
-   per-stage files). Then land the scaffold on the plan branch: **propose
+   and copying `stage-f-review.md` **once**, renamed to `stage-f-review.md`
+   (no slug needed — it's the standing final stage), and fill every
+   placeholder (frozen decisions, stage index, ledger rows, per-stage files).
+   Then land the scaffold on the plan branch: **propose
    creating the plan branch `plan-<slug>` off `main`** and put the scaffold
    there — `.plan/` lives on the plan branch. **Propose the scaffold commit**
    (conventional message, e.g. `chore(plan): scaffold .plan/ for <slug>`) and

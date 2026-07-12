@@ -12,9 +12,10 @@ don't share it; the plan can't drift because every decision lives in exactly one
 place; progress is a glanceable ledger, not a transcript.
 
 The file formats are in `references/templates/` (`PLAN.md`, `LEDGER.md`,
-`stage-N.md`, `README.md`) — copy those verbatim for structure, then fill every
-`<placeholder>` when scaffolding. This file is the *method*: when to use it, how
-to decompose, how to set flags. Don't restate the templates here.
+`stage-N.md`, `stage-f-review.md`, `README.md`) — copy those verbatim for
+structure, then fill every `<placeholder>` when scaffolding. This file is the
+*method*: when to use it, how to decompose, how to set flags. Don't restate
+the templates here.
 
 ## When to use it
 
@@ -66,7 +67,8 @@ context a long session would carry).
 - **Keystone as S0.** Identify the piece with no prerequisites that everything
   else needs, make it S0, and gate the rest behind it.
 - **Standing final review stage.** Always append `SF: plan review` as the last
-  stage (see below). Bootstrap adds it; it's not optional.
+  stage (see below), scaffolded from `stage-f-review.md`. Bootstrap adds it;
+  it's not optional.
 
 ## Flag heuristics
 
