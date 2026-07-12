@@ -12,9 +12,9 @@ don't share it; the plan can't drift because every decision lives in exactly one
 place; progress is a glanceable ledger, not a transcript.
 
 The file formats are in `references/templates/` (`PLAN.md`, `LEDGER.md`,
-`stage-N.md`, `README.md`) — copy those verbatim when scaffolding. This file is
-the *method*: when to use it, how to decompose, how to set flags. Don't restate
-the templates here.
+`stage-N.md`, `README.md`) — copy those verbatim for structure, then fill every
+`<placeholder>` when scaffolding. This file is the *method*: when to use it, how
+to decompose, how to set flags. Don't restate the templates here.
 
 ## When to use it
 
