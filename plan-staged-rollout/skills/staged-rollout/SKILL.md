@@ -107,7 +107,8 @@ review stage catch them.
 
 ## Git model
 
-Default is **branch-per-stage**, and it's the model this plugin was built with:
+**Branch-per-stage is the only supported model** — it's the model this plugin
+was built with, and there is no alternative to choose at bootstrap:
 
 ```
 main
@@ -118,21 +119,28 @@ main
 plan-<slug> → final PR → main         ← at closeout
 ```
 
-- **Every stage gets its own branch and PR into the plan branch — no
-  exceptions.** Uniformity keeps each unit reviewable in isolation and contains
-  the classic failure where "one small commit" quietly becomes twenty commits of
-  fixes bleeding into shared history.
-- **Flat branch names** (`plan-<slug>-s3`, not `plan/<slug>/s3`) — git refs can't
-  nest a branch under an existing branch name.
-- **Push freely; offer PRs and merges.** Stage and plan branches are feature
-  branches — the agent creates and **pushes** them without asking. It then
-  **offers** to open the stage PR into the plan branch and to merge it once
-  you've reviewed; it never opens or merges without your OK, never pushes to
-  `main`, and the final PR to `main` is always yours to merge.
-- The strategy is recorded as a frozen decision at bootstrap. Alternatives,
-  offered only then: a **single plan branch** with direct commits (sensible for
-  infra-style rollouts where the deliverable is applied host state, not repo
-  code) or plain **trunk**.
+Five frozen semantics:
+
+1. **One branch per stage**, cut from the plan branch (`plan-<slug>`) — no
+   exceptions. Uniformity keeps each unit reviewable in isolation and contains
+   the classic failure where "one small commit" quietly becomes twenty commits
+   of fixes bleeding into shared history.
+2. **Commits are compulsory and incremental** — commit at logical units as the
+   stage progresses, not a single commit at stage end.
+3. **A stage PR into the plan branch is compulsory** — the finish protocol
+   creates it; it is never "offered" as optional.
+4. **A stage cannot be closed (marked `done`) until its PR is merged** into
+   the plan branch.
+5. **After the merge, check out the plan branch and fast-forward** before the
+   session ends.
+
+Also: **flat branch names** (`plan-<slug>-s3`, not `plan/<slug>/s3`) — git
+refs can't nest a branch under an existing branch name. And **push freely,
+offer merges**: stage and plan branches are feature branches — the agent
+creates and **pushes** them without asking, and **opens** the stage PR into
+the plan branch as part of the compulsory finish protocol, but **offers** the
+merge for your OK — it never merges without your OK, never pushes to `main`,
+and the final PR to `main` is always yours to merge.
 
 ## The final review stage
 

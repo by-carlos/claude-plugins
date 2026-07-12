@@ -22,15 +22,16 @@ stage (Operating protocol, finish step 3).
 
 - <Decision 1 — e.g. naming, key library/tool choice, a hard constraint.>
 - <Decision 2.>
-- **Git strategy:** branch-per-stage (default). `main` → `plan-<slug>` (the
-  plan branch; `.plan/` lives here) → one branch per stage
-  `plan-<slug>-s<N>` (flat names — git refs can't nest a branch under an
-  existing branch), each landing as a PR into `plan-<slug>`; final PR
-  `plan-<slug>` → `main` at closeout. The agent creates and pushes stage and
-  plan branches without asking, then offers the stage PR (and its merge) for
-  your OK — it never merges on its own and never pushes to `main`. <Replace
-  this bullet if you chose an alternative at bootstrap:
-  single plan branch with direct commits, or plain trunk.>
+- **Git strategy:** branch-per-stage (fixed — the only supported model).
+  `main` → `plan-<slug>` (the plan branch; `.plan/` lives here) → one branch
+  per stage `plan-<slug>-s<N>` (flat names — git refs can't nest a branch
+  under an existing branch), each landing as a PR into `plan-<slug>`; final PR
+  `plan-<slug>` → `main` at closeout. Commits on a stage branch are compulsory
+  and incremental (logical units as the stage progresses, not one commit at
+  the end). The agent creates and pushes stage and plan branches without
+  asking, and **opens** the stage PR as a compulsory part of finishing a
+  stage — never merging without your OK, never pushing to `main`. A stage
+  cannot be marked `done` until its PR is merged into the plan branch.
 - **Final review stage:** the last stage (`SF`) is a standing plan review. It
   catalogs loose ends — each becomes a new in-plan stage, a spin-off
   candidate, or an explicit "accepted, won't fix" — and NEVER implements.
@@ -70,8 +71,7 @@ model. Escalate only where a stage has genuine open design questions
 4. **Branch:** first make sure the local plan branch is up to date
    (`git fetch` + fast-forward), then create `plan-<slug>-s<N>` from
    `plan-<slug>` (or use it if the human already made it). Work
-   happens on the stage branch. <Adjust if you chose a non-default git
-   strategy.>
+   happens on the stage branch.
 5. **Honor `mode` / `exec`:**
    - `mode: direct` → state a one-line plan, then implement.
    - `mode: brainstorm` → run a design pass scoped to THIS stage first,
@@ -90,9 +90,11 @@ model. Escalate only where a stage has genuine open design questions
       one-line result. Detail goes in the notes block, never the table.
    3. If a decision changed or was added, amend **Frozen decisions in this
       file** — nowhere else.
-   4. Commit on the stage branch (conventional message) and **push it**, then
-      **offer** to open the PR into `plan-<slug>` and to merge it once
-      reviewed — never merge on your own.
+   4. Commit on the stage branch throughout the stage at logical units
+      (conventional messages) — not one commit at the end. Push the branch
+      and **open the PR** into `plan-<slug>` (compulsory, not offered); then
+      **offer** to merge it once reviewed — never merge on your own. The
+      stage cannot be marked `done` until this PR is merged.
    5. Announce: this stage is **finished**; the next runnable stage (the first
       `todo` whose `depends` are all `done`), the exact prompt/command to run
       it, and its recommended model/effort. Then stop.

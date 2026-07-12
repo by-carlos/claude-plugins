@@ -42,13 +42,16 @@ main
 plan-<slug> → final PR → main       ← at /plan-close
 ```
 
-Every stage gets its own branch and PR into the plan branch. Branch names are
-flat (`plan-<slug>-s3`, not `plan/<slug>/s3`) because git refs can't nest a
-branch under an existing branch name. Branch creation and pushes are autonomous
-on feature branches — the agent creates and pushes stage/plan branches without
-asking; PRs and merges are offered and happen only on your OK, and it never
-pushes to `main`. <If you chose a non-default git strategy at bootstrap
-(single plan branch, or trunk), describe it here instead.>
+Every stage gets its own branch and PR into the plan branch — the only
+supported model, fixed at bootstrap. Branch names are flat (`plan-<slug>-s3`,
+not `plan/<slug>/s3`) because git refs can't nest a branch under an existing
+branch name. Commits on a stage branch are compulsory and incremental —
+logical units as the stage progresses, not one commit at the end. Branch
+creation and pushes are autonomous on feature branches — the agent creates
+and pushes stage/plan branches without asking, and opens the stage PR as a
+compulsory part of finishing a stage; merges are offered and happen only on
+your OK, and it never pushes to `main`. A stage cannot be marked `done` until
+its PR is merged into the plan branch.
 
 ## Closeout
 
