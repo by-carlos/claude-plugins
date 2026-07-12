@@ -23,11 +23,15 @@ Then work through these steps **in order**:
 
 1. **Weight gate (first, before anything else).** Bootstrap is the
    highest-leverage session of a plan. Verify from your own system prompt that
-   the session model is **Opus-class or better**. State the effort
-   recommendation (**medium or higher**) as a reminder — effort is not
-   introspectable, so never claim to verify it. If the model is lighter than
-   Opus-class, warn and **offer to abort** so the user can relaunch on a
-   heavier model, before doing any design or scaffolding work.
+   the session model is **Opus-class or better**, checked mechanically against
+   the skill's **Model weight tiers** rubric — not the model's own guess about
+   itself. State the effort recommendation (**medium or higher**) as a
+   reminder — effort is not introspectable, so never claim to verify it. If
+   the model is lighter than Opus-class, warn and **offer to abort** so the
+   user can relaunch on a heavier model, before doing any design or
+   scaffolding work. If the disclosed model doesn't recognizably match a tier
+   in the rubric, don't guess — state the exact model ID/name and ask the
+   user which tier applies.
 
 2. **Design pass (only if the design isn't already settled).** If `$ARGUMENTS`
    already carries settled decisions, skip straight to decomposition. Otherwise

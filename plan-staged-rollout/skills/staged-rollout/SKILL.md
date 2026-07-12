@@ -88,6 +88,23 @@ genuinely warrants it:
   model; reserve the top model for the keystone and the one or two design-heavy
   stages. Most staged work is `low`/`med` effort.
 
+## Model weight tiers
+
+Every weight check (bootstrap's gate, a stage's `model` comparison) needs a
+mechanical rule for "is this session heavy enough" — not the model's own guess
+about itself. Maintain this tier list as model families evolve:
+
+- **Top tier ("Opus-class"):** the Opus generation (e.g. `claude-opus-*`).
+- **Mid tier ("Sonnet-class"):** the Sonnet generation (e.g. `claude-sonnet-*`),
+  and equivalently-positioned mid-tier models (e.g. `claude-fable-*`).
+- **Light tier ("Haiku-class"):** the Haiku generation (e.g. `claude-haiku-*`).
+
+**Fail-safe:** if the session's disclosed model ID or name doesn't recognizably
+match a tier above — an unfamiliar family, a third-party model, a future rename —
+do not guess which tier it belongs to. State the exact model ID/name from the
+system prompt and ask the user which tier applies, rather than silently passing
+or failing the gate.
+
 ## Statuses and human-gated stages
 
 Statuses are `todo → doing → done`, plus `blocked` and `skipped` (full lifecycle

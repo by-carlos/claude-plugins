@@ -32,11 +32,15 @@ Work through these steps **in order**:
 
 3. **Weight check (ergonomic add).** Before doing any stage work, compare the
    session against the stage's `model` and `effort` flags in `.plan/PLAN.md`'s
-   stage index. Verify the **model** from your own system prompt. State the
-   recommended **effort** as a reminder only — effort is not introspectable, so
-   never claim to verify it. If the session is **lighter** than the stage
+   stage index. Verify the **model** from your own system prompt, checked
+   mechanically against the `staged-rollout` skill's **Model weight tiers**
+   rubric — not a guess about your own weight. State the recommended
+   **effort** as a reminder only — effort is not introspectable, so never
+   claim to verify it. If the session is **lighter** than the stage
    recommends, say so plainly and **offer continue or abort** so the user can
-   relaunch on a heavier session before any work begins.
+   relaunch on a heavier session before any work begins. If the disclosed
+   model doesn't recognizably match a tier in the rubric, don't guess — state
+   the exact model ID/name and ask the user which tier applies.
 
 4. **Dependency gate (ergonomic surfacing of the protocol's rule).** Apply
    `PLAN.md`'s dependency gate for every stage this one `depends` on. If a
