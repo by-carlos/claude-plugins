@@ -8,6 +8,12 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **`plan-staged-rollout`:** `/plan-stages` bootstrap now computes the modal `model`
+  across the stage index and, when a strict majority of stages share one, recommends
+  setting it as the session default (and notes it in the scaffolded `.plan/README.md`)
+  so the per-stage weight gate only prompts on the exceptions. Bootstrap-time
+  convenience only — the stage index stays the authoritative, individually-checked
+  home for each stage's `model`/`effort` (#18).
 - **`plan-staged-rollout`:** a `.plan/`-aware `SessionStart` hook — opening a fresh
   session in a repo with an active staged rollout now automatically surfaces the
   rollout and its next runnable stage (a `doing` stage to resume, else the first

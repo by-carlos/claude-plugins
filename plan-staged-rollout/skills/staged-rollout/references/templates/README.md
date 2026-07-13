@@ -22,6 +22,12 @@ convenience, not a dependency.
 Run stages in any order allowed by their `depends`. The next runnable stage is
 the first `todo` row in `LEDGER.md` whose dependencies are all `done`.
 
+<!-- If a strict majority of stages in PLAN.md's stage index share a `model`,
+bootstrap fills in a line here, e.g.: "6 of 8 stages recommend `opus` —
+setting it as your session default means the weight gate only prompts on the
+exceptions." Delete this comment (and the line above, if bootstrap didn't add
+one) once filled. -->
+
 ## Files
 
 - `PLAN.md` — architecture, **frozen decisions**, stage index, and the
