@@ -7,8 +7,8 @@
 #
 # See CI: .github/workflows/gitleaks.yml (gitleaks auto-loads this file at the
 # scan root). Genuine historical findings would be suppressed via
-# .gitleaks-baseline.json, not here — this file is only for intentional,
-# self-documenting placeholders.
+# .gitleaks-baseline.json, not here — this file is only for intentional
+# *.example template files (no [placeholder: ...] convention in this repo).
 
 title = "claude-plugins repo gitleaks config"
 
@@ -16,16 +16,8 @@ title = "claude-plugins repo gitleaks config"
 useDefault = true
 
 [[allowlists]]
-description = "Documented placeholder values and *.example template files"
-# Match against the whole line so it works regardless of which rule fires.
-regexTarget = "line"
-# 1) Explicit placeholder convention — any value wrapped in [placeholder: ...]:
-#      PUSHOVER_TOKEN=[placeholder: Pushover application API token]
-#    Self-documenting AND scanner-safe. Prefer this over cryptic dummy strings.
-regexes = [
-  '''\[placeholder:[^\]]*\]''',
-]
-# 2) *.example / *.example.* template files ship fake values by design.
+description = "*.example template files"
+# *.example / *.example.* template files ship fake values by design.
 paths = [
   '''\.example$''',
   '''\.example\.''',
