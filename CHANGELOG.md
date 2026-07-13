@@ -8,6 +8,12 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **`/triage-issue`** — a standalone skill that triages open issues across one or
+  more repos into a ranked burn-down queue on a GitHub Projects (v2) board. It
+  dedups and *consolidates* overlapping issues into single self-contained ones,
+  fixes label/field hygiene, and (behind a single go/no-go) sets
+  `Status`/`Priority`/`Size`/`Effort` so the board — not a local file — is the
+  queue's source of truth. Pairs with `/work-issue next`.
 - **`/work-issue`** — a standalone skill (in `skills/`, installed by copying
   the folder to `~/.claude/skills/` or uploading it to claude.ai / Claude
   Desktop) that works a GitHub issue end-to-end: reads
@@ -15,7 +21,11 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   trivial one-liners), branches as `<type>/<issue>-<slug>` off a configurable
   base, implements with conventional commits, opens a PR with `Closes #<n>`,
   and squash-merges only after explicit confirmation, tidying up branches
-  afterwards.
+  afterwards. A `next` mode (`/work-issue next`) pulls the top `Ready` issue off
+  a `/triage-issue` board queue — ordered by Priority, then Size, then issue
+  number — flips it to `In progress` to prevent double-grabs, bounces a too-big
+  issue back to `Backlog` so the queue can't loop on it, and on close names the
+  next issue and its suggested model.
 - **`plan-staged-rollout`:** a worked example of a scaffolded `.plan/` under
   `examples/` — a complete toy project (3 implementation stages + the standing
   final review) captured mid-rollout: a `done` stage with real acceptance output
