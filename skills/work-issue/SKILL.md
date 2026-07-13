@@ -3,8 +3,30 @@ name: work-issue
 description: Work a GitHub issue end-to-end — read the thread, gate on scope, branch, implement with conventional commits, open a PR that closes the issue, and squash-merge after explicit confirmation. Use when asked to work, fix, or implement a GitHub issue by number.
 ---
 
-Work the given GitHub issue of this repository end-to-end. Use the base
-branch the user names; if none, default to `main`.
+Work a GitHub issue end-to-end. Two ways to pick the issue:
+
+- **`/work-issue <number> [base]`** — work that specific issue.
+- **`/work-issue next`** — pull the top item off the triage queue (the Projects
+  board that [`/triage-issue`](../triage-issue/SKILL.md) populates) and work it.
+
+Use the base branch the user names; if none, default to `main`.
+
+## 0. Pick the issue (`next` mode only)
+
+`next` reads the same board schema `/triage-issue` writes, so it needs the `project`
+scope on `gh` (`gh auth refresh -s project`).
+
+- Take the queue head — the `Ready` issue with the lowest `(Priority P0<P1<P2<P3,
+  then Size XS<…<XL, then issue number asc)`:
+  ```
+  gh project item-list <number> --owner <owner> --format json --limit 500
+  ```
+  Filter `status == "Ready"` and `content.type == "Issue"`, sort by those keys, take
+  the first. `content.repository` (`owner/repo`) and `content.number` say which repo
+  and issue to work; carry `effort` (the recommended model) to the hand-off in §6.
+- **Empty queue** → say so and stop.
+- On selection, flip the item to `Status = In progress` so a re-run of `next` — or a
+  parallel session — won't grab the same issue. Then continue from §1 for that issue.
 
 ## 1. Fetch & assess
 
@@ -18,7 +40,9 @@ branch the user names; if none, default to `main`.
   - **Too big** (multi-session epic, several independent deliverables, or
     acceptance criteria too vague to verify): say so, recommend splitting the
     issue or decomposing the work first (e.g. a staged-rollout plan, if that
-    plugin is installed), and **stop**.
+    plugin is installed), and **stop**. In `next` mode, first set the item's
+    `Status = Backlog` and comment on the issue explaining it needs
+    splitting/refinement — so the next `next` skips it instead of re-grabbing it.
   - **Too small** (a trivial one-liner where branch/PR ceremony is pure
     overhead): say so and offer to just make the change directly on the
     current branch instead. **Stop and wait** for the choice.
@@ -57,3 +81,13 @@ branch the user names; if none, default to `main`.
 - On OK: **squash merge** (unless the repo's own conventions specify a
   different merge type), then tidy up — delete the remote and local branch,
   switch back to the base, and pull.
+
+## 6. Hand off to the next issue (`next` mode only)
+
+- The board's **"Item closed → Done"** workflow moves the merged card to `Done`
+  automatically via `Closes #n` — no manual queue edit needed.
+- If the merge was **declined**, leave the PR open; the item stays `In progress`, so
+  `next` won't re-grab it — finish or merge it by hand later.
+- Announce the queue head for the next run — one more `gh project item-list` (creds are
+  already loaded): **"Next: #NN — \<title\> — suggested model: \<effort\>."** Read
+  `effort` straight from the field; never recompute it. If the queue is empty, say so.
