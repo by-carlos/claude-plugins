@@ -13,7 +13,11 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   dedups and *consolidates* overlapping issues into single self-contained ones,
   fixes label/field hygiene, and (behind a single go/no-go) sets
   `Status`/`Priority`/`Size`/`Effort` so the board — not a local file — is the
-  queue's source of truth. Pairs with `/work-issue next`.
+  queue's source of truth. Before ranking, it resolves each issue's
+  cross-references and — via `closedByPullRequestsReferences` on any cited,
+  already-closed umbrella/parent — detects work whose fix already merged, closing
+  it out as completed rather than re-queueing or re-implementing it. Pairs with
+  `/work-issue next`.
 - **`/work-issue`** — a standalone skill (in `skills/`, installed by copying
   the folder to `~/.claude/skills/` or uploading it to claude.ai / Claude
   Desktop) that works a GitHub issue end-to-end: reads

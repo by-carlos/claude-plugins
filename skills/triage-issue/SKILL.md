@@ -49,6 +49,16 @@ same stages, same format, skimmable, no filler.
 Stage 0 — Gather
 - Pull every open issue in scope via `gh`: full body, labels, comments, cross-references
   (`gh issue list`, `gh issue view <n> --comments`).
+- **Resolve every cross-reference, and check whether the work already shipped.** For each
+  `#N` an issue names (umbrella, parent, "part of", "supersedes", "duplicate of"), pull
+  that issue's state. If it is closed, get *what closed it* —
+  `gh issue view <N> --json state,stateReason,closedByPullRequestsReferences` (the closing
+  PR lives in `closedByPullRequestsReferences`; it is **not** in `comments`, and an empty
+  comments array is not "no explanation"). Then read that PR's body and changed files
+  (`gh pr view <p> --json body,files`). A closed-as-`COMPLETED` parent whose PR touches
+  the open issue's affected files is a strong signal the fix already merged and the child
+  was merely never closed — carry it to Stage 2 §0, do not assume the parent was closed by
+  mistake.
 - Pull the board's items and their fields:
   `gh project item-list <number> --owner <owner> --format json --limit 500`
   (raise `--limit` past the item count — it defaults to 30). Custom fields surface as
@@ -65,10 +75,19 @@ Stage 1 — Board & metadata hygiene
   or Effort = `human`).
 - Flag issues with thin or missing labels.
 - Flag priority drift: issue body states one priority, board field says another.
+- Flag closed-parent / open-child anomalies: any open issue citing an umbrella or parent
+  that is already closed-as-`COMPLETED` — its fix may already be merged. Resolve in Stage 2 §0.
 Findings only — no writes yet.
 
 Stage 2 — Consolidate & analyze
 Output ONE numbered, skimmable list, grouped under these headers, one line per item:
+0. **Already resolved (check first).** Open issues whose described fix is already merged —
+   the umbrella/parent they cite was closed by a merged PR that covers their scope, or their
+   named affected files already carry the change. Verify against the current tree (read the
+   PR diff, or `git log --oneline -- <affected files>` since the issue was filed), then close
+   as completed-by-#N — never queue, consolidate, or re-implement. Pull these out before all
+   downstream logic, same as Broken. A closed-`COMPLETED` parent is evidence the fix shipped,
+   not that it was closed in error — prove it against the tree before concluding either way.
 1. **Duplicates** — issues that are the same work; which closes into which survivor.
 2. **Consolidate** — distinct issues whose scope overlaps enough that working them
    separately would conflict or re-tread the same files. Merge them into ONE issue:
@@ -122,4 +141,8 @@ smaller-size first:
 - `Ready` is the only readiness signal; there is no separate readiness section.
 - Consolidate overlaps into one issue — never leave a "work these together" batch for the
   queue consumer to reconcile.
+- Never queue or re-implement work that already merged. When an issue cites a closed
+  umbrella/parent, read its closing PR (`closedByPullRequestsReferences`) before theorizing
+  why the issue is still open — a closed-`COMPLETED` parent usually means the fix shipped and
+  the child was never closed, not that it was closed by mistake.
 </rules>
