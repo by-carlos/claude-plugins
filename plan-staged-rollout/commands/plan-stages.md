@@ -73,14 +73,25 @@ Then work through these steps **in order**:
    and copying `stage-f-review.md` **once**, renamed to `stage-f-review.md`
    (no slug needed — it's the standing final stage), and fill every
    placeholder (frozen decisions, stage index, ledger rows, per-stage files).
-   Then land the scaffold on the plan branch: **propose
-   creating the plan branch `plan-<slug>` off `main`** and put the scaffold
-   there — `.plan/` lives on the plan branch. **Propose the scaffold commit**
-   (conventional message, e.g. `chore(plan): scaffold .plan/ for <slug>`) and
-   wait for the user's OK — do not create the branch or commit unilaterally.
+   After the stage index is filled, compute the **modal `model`** across all
+   stage rows (including SF); if one model is recommended by a strict majority
+   of stages, note it in `.plan/README.md`'s "How to run a stage" section as a
+   one-line hint (e.g. *"6 of 8 stages recommend `opus` — setting it as your
+   session default means the weight gate only prompts on the exceptions."*).
+   This is a bootstrap-time convenience only — it never changes the per-stage
+   `model`/`effort` values in the stage index, which stay authoritative and are
+   still checked individually by `/plan-run`'s weight gate. Skip the hint if
+   there's no strict majority (e.g. an even split). Then land the scaffold on
+   the plan branch: **propose creating the plan branch `plan-<slug>` off
+   `main`** and put the scaffold there — `.plan/` lives on the plan branch.
+   **Propose the scaffold commit** (conventional message, e.g.
+   `chore(plan): scaffold .plan/ for <slug>`) and wait for the user's OK — do
+   not create the branch or commit unilaterally.
 
 6. **End announcement.** State explicitly that **bootstrap is finished and no
    stage was executed.** Tell the user their next action, in a **fresh
    session**, is **"run stage 0 of the plan"** — or the explicit command
    **`/plan-staged-rollout:plan-run 0`** — and state **S0's recommended model
-   and effort** from the stage index. Then stop.
+   and effort** from the stage index. If step 5 found a modal-model majority,
+   repeat that recommendation here too (e.g. *"consider `/model opus` as your
+   session default — it covers 6 of 8 stages"*). Then stop.
