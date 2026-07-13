@@ -1,15 +1,15 @@
 ---
-description: Work a GitHub issue end-to-end — branch, implement, PR, merge after confirmation.
-argument-hint: <issue-number> [base-branch]
+name: work-issue
+description: Work a GitHub issue end-to-end — read the thread, gate on scope, branch, implement with conventional commits, open a PR that closes the issue, and squash-merge after explicit confirmation. Use when asked to work, fix, or implement a GitHub issue by number.
 ---
 
-Work GitHub issue **$1** of this repository end-to-end. Base branch: **$2**
-(if empty, default to `main`).
+Work the given GitHub issue of this repository end-to-end. Use the base
+branch the user names; if none, default to `main`.
 
 ## 1. Fetch & assess
 
 - Read the full thread, not just the body — decisions often live in the
-  comments: `gh issue view $1 --comments`.
+  comments: `gh issue view <number> --comments`.
 - If the issue embeds images or attachments
   (`https://github.com/user-attachments/...`), fetch them with
   `curl -sL -H "Authorization: token $(gh auth token)" -o <tmpfile> <url>`
@@ -27,7 +27,7 @@ Work GitHub issue **$1** of this repository end-to-end. Base branch: **$2**
 ## 2. Branch
 
 - `git fetch origin`, then branch off the base:
-  `git switch -c <type>/$1-<slug> origin/<base>`.
+  `git switch -c <type>/<number>-<slug> origin/<base>`.
 - `<type>`: the conventional-commit type matching the issue — `feat`, `fix`,
   `docs`, `refactor`, `test`, or `chore`.
 - `<slug>`: 2–5 kebab-case words distilled from the issue title.
@@ -46,7 +46,8 @@ Work GitHub issue **$1** of this repository end-to-end. Base branch: **$2**
 - Push the branch and open the PR against the base:
   `gh pr create --base <base>`.
 - PR description: what changed and why, any decisions or trade-offs worth a
-  reviewer's attention, and `Closes #$1` so the merge auto-closes the issue.
+  reviewer's attention, and `Closes #<number>` so the merge auto-closes the
+  issue.
 
 ## 5. Merge — confirmation required
 

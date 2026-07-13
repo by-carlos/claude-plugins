@@ -8,8 +8,9 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
-- **`/work-issue`** — a standalone slash command (in `commands/`, installed by
-  copying to `~/.claude/commands/`) that works a GitHub issue end-to-end: reads
+- **`/work-issue`** — a standalone skill (in `skills/`, installed by copying
+  the folder to `~/.claude/skills/` or uploading it to claude.ai / Claude
+  Desktop) that works a GitHub issue end-to-end: reads
   the full issue thread, gates on scope (pushes back on multi-session epics and
   trivial one-liners), branches as `<type>/<issue>-<slug>` off a configurable
   base, implements with conventional commits, opens a PR with `Closes #<n>`,
