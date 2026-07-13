@@ -8,6 +8,13 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **`/work-issue`** — a standalone slash command (in `commands/`, installed by
+  copying to `~/.claude/commands/`) that works a GitHub issue end-to-end: reads
+  the full issue thread, gates on scope (pushes back on multi-session epics and
+  trivial one-liners), branches as `<type>/<issue>-<slug>` off a configurable
+  base, implements with conventional commits, opens a PR with `Closes #<n>`,
+  and squash-merges only after explicit confirmation, tidying up branches
+  afterwards.
 - **`plan-staged-rollout`:** a worked example of a scaffolded `.plan/` under
   `examples/` — a complete toy project (3 implementation stages + the standing
   final review) captured mid-rollout: a `done` stage with real acceptance output

@@ -35,6 +35,24 @@ From within Claude Code:
 Installed plugin commands are namespaced, e.g.
 `/plan-staged-rollout:plan-stages`.
 
+## Bonus: standalone commands
+
+The [`commands/`](commands/) directory holds standalone slash commands that
+aren't part of any plugin — install one by copying it into
+`~/.claude/commands/`.
+
+### [/work-issue](commands/work-issue.md)
+
+**Work a GitHub issue end-to-end** — read the full thread, sanity-check the
+scope (pushes back on epics and one-liners), branch as
+`<type>/<issue>-<slug>`, implement with conventional commits, open a PR that
+closes the issue, and squash-merge only after explicit confirmation.
+
+```
+/work-issue 42          →  work issue #42, based on main
+/work-issue 42 develop  →  same, based on develop
+```
+
 ## Author
 
 Built by **Carlos Eng** —
