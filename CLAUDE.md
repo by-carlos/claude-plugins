@@ -19,6 +19,15 @@ Project instructions for agentic coding in this repository.
 - Merging is never unilateral: propose the merge and wait for the maintainer's OK.
   Never push directly to `main`.
 
+## Secret scanning
+
+[gitleaks](https://github.com/gitleaks/gitleaks) runs in CI on every push/PR
+([`.github/workflows/gitleaks.yml`](.github/workflows/gitleaks.yml)); known
+historical findings would be baselined in
+[`.gitleaks-baseline.json`](.gitleaks-baseline.json) (currently empty — clean
+history) so CI stays green on dead history while still catching anything new.
+No local pre-commit hook — dev environments vary, so this is CI-only by design.
+
 ## Releasing
 
 - **`main` is live distribution.** The marketplace source tracks the branch, not a
