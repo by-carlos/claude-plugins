@@ -72,9 +72,11 @@ context a long session would carry).
 
 ## Flag heuristics
 
-Each stage declares `depends` / `mode` / `exec` / `model` / `effort` (formats in
-the templates). Defaults are deliberately cheap — escalate only where a stage
-genuinely warrants it:
+Each stage declares `depends` / `mode` / `exec` / `model` / `effort` in the
+**PLAN.md stage index** — the single authoritative home for these flags, read
+by `/plan-run`'s weight check and next-runnable logic. Stage files never restate
+them. Defaults are deliberately cheap — escalate only where a stage genuinely
+warrants it:
 
 - `mode: direct` by default (state a one-line plan, implement). Use `brainstorm`
   only where the stage has real open design choices. A full brainstorm on a
@@ -187,16 +189,18 @@ Crucially, **it catalogs; it never implements.** Each finding becomes exactly on
 of three outcomes:
 
 - **A new stage in this plan** — follow-up work belonging to this project. It
-  gets a ledger row and a stage file and runs later as a normal stage in its own
-  fresh session and branch.
+  gets a **PLAN.md stage index row** (with its flags — required, since the weight
+  check and next-runnable logic only see stages listed in the index), a ledger
+  row, and a stage file, and runs later as a normal stage in its own fresh
+  session and branch.
 - **A spin-off candidate** — work that has outgrown this plan (a genuinely new
   project). Recorded in the ledger and surfaced in the final PR body as follow-up;
   it does *not* block closeout. Start it later with its own bootstrap.
 - **An explicit "accepted, won't fix"** — with a one-line reason, so the gap is a
   decision instead of a surprise.
 
-Its acceptance check: every loose end in the notes is either a new ledger row or
-explicitly closed.
+Its acceptance check: every loose end in the notes is either a new stage (a
+stage index row, a ledger row, and a stage file) or explicitly closed.
 
 ## Closeout
 

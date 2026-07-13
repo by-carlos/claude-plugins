@@ -199,9 +199,9 @@ becomes exactly one of:
 
 - **A new stage in this plan** — for follow-up work that belongs to this
   project (a shortcut to reconcile, a config to bring under management). It
-  gets a ledger row and a stage file, and runs later as a normal
-  `/plan-staged-rollout:plan-run <N>` in its own fresh session and branch,
-  like any other stage.
+  gets a PLAN.md stage index row (with its flags), a ledger row, and a stage
+  file, and runs later as a normal `/plan-staged-rollout:plan-run <N>` in its
+  own fresh session and branch, like any other stage.
 - **A spin-off candidate** — for work that has outgrown this plan (a genuinely
   new project). It's recorded in the ledger and surfaced in the final PR body
   as follow-up work; it does not block closeout. Start it later with its own

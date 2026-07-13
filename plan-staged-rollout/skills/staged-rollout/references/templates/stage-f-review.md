@@ -1,6 +1,8 @@
 # SF — Plan review
 
-**depends:** <last stage(s)>  **mode:** direct  **exec:** inline  **model:** <model>  **effort:** <effort>
+<!-- This stage's flags (depends / mode / exec / model / effort) live ONLY in
+the PLAN.md stage index — the single authoritative home. Do not restate them
+here; a copy is what drifts. -->
 
 > First read `.plan/PLAN.md` (Frozen decisions + Operating protocol) and
 > `.plan/LEDGER.md` — the *entire* ledger, every note, gotcha, shortcut, and
@@ -19,8 +21,11 @@ and records them.
 - [ ] Read every ledger row's notes end to end; list every loose end, gotcha,
   shortcut, and known gap surfaced across all stages.
 - [ ] For each loose end, resolve it into exactly one outcome:
-  - **New stage in this plan** — add a ledger row and a stage file; it runs
-    later as a normal stage in its own fresh session and branch.
+  - **New stage in this plan** — add a **PLAN.md stage index row** (with its
+    `depends` / `mode` / `exec` / `model` / `effort` flags — the index is the
+    authoritative home, so `/plan-run`'s weight check and next-runnable logic
+    can see the stage), a ledger row, and a stage file; it runs later as a
+    normal stage in its own fresh session and branch.
   - **Spin-off candidate** — record it in the ledger and note it for the
     final PR body as follow-up; it does not block closeout.
   - **Accepted, won't fix** — write a one-line reason in the ledger so the
@@ -34,11 +39,12 @@ ledger. Re-running the stage resumes from the first unticked box. -->
 
 ## Acceptance
 
-- Every loose end captured from the ledger is either a new ledger row (with
-  a stage file) or explicitly closed (spin-off note or accepted-won't-fix
-  reason) — paste the resulting list into the ledger notes as evidence.
+- Every loose end captured from the ledger is either a new stage (a PLAN.md
+  stage index row **plus** a ledger row **plus** a stage file) or explicitly
+  closed (spin-off note or accepted-won't-fix reason) — paste the resulting
+  list into the ledger notes as evidence.
 
 ## Artifacts
 
-<Any new stage files or ledger rows this review spawned. No implementation
-artifacts — this stage never builds anything itself.>
+<Any new stage index rows, ledger rows, or stage files this review spawned.
+No implementation artifacts — this stage never builds anything itself.>
