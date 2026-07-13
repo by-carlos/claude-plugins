@@ -35,6 +35,25 @@ From within Claude Code:
 Installed plugin commands are namespaced, e.g.
 `/plan-staged-rollout:plan-stages`.
 
+## Bonus: standalone skills
+
+The [`skills/`](skills/) directory holds standalone skills that aren't part
+of any plugin — install one by copying its folder into `~/.claude/skills/`
+(Claude Code, where it's also invocable as a slash command), or upload the
+folder to claude.ai / Claude Desktop.
+
+### [/work-issue](skills/work-issue/SKILL.md)
+
+**Work a GitHub issue end-to-end** — read the full thread, sanity-check the
+scope (pushes back on epics and one-liners), branch as
+`<type>/<issue>-<slug>`, implement with conventional commits, open a PR that
+closes the issue, and squash-merge only after explicit confirmation.
+
+```
+/work-issue 42          →  work issue #42, based on main
+/work-issue 42 develop  →  same, based on develop
+```
+
 ## Author
 
 Built by **Carlos Eng** —
