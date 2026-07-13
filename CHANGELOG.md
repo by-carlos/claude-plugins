@@ -6,6 +6,8 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2] — 2026-07-13
+
 ### Added
 
 - **`/triage-issue`** — a standalone skill that triages open issues across one or
@@ -88,4 +90,5 @@ Initial public release of the `carlos-plugins` marketplace.
     *not* to use it.
 - Marketplace manifest, root and plugin READMEs, and MIT license.
 
+[0.2]: https://github.com/by-carlos/claude-plugins/releases/tag/v0.2
 [0.1.0]: https://github.com/by-carlos/claude-plugins/releases/tag/v0.1.0
