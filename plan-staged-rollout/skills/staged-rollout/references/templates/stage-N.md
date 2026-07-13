@@ -1,6 +1,8 @@
 # S<N> — <Stage name>
 
-**depends:** <S<M> / — >  **mode:** <direct / brainstorm>  **exec:** <inline / subagent(<model>)>  **model:** <model>  **effort:** <effort>
+<!-- This stage's flags (depends / mode / exec / model / effort) live ONLY in
+the PLAN.md stage index — the single authoritative home. Do not restate them
+here; a copy is what drifts. -->
 
 > First read `.plan/PLAN.md` (Frozen decisions + Operating protocol) and
 > `.plan/LEDGER.md`. Follow the protocol, including the finish protocol.

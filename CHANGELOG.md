@@ -21,6 +21,11 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   (`gh pr create --base plan-<slug>`) (#17); the ledger `done` edit moves to the plan
   branch after the stage PR merges (#19); redo of a `done` stage cuts a fresh
   `-redo-<K>` branch from the plan branch tip.
+- **`plan-staged-rollout`:** the `PLAN.md` stage index is now the single authoritative
+  home for each stage's `depends` / `mode` / `exec` / `model` / `effort`; stage files
+  no longer restate them, ending the two-copies-that-drift ambiguity. Adding a
+  PLAN.md stage index row is now a required part of a review-spawned stage's outcome,
+  so `/plan-run`'s weight check and next-runnable logic can see it (#5).
 
 ## [0.1.0] — 2026-07-10
 

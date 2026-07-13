@@ -49,6 +49,14 @@ stage (Operating protocol, finish step 3).
 | ... | ... | ... | ... | ... | ... | ... |
 | SF Plan review | `stage-f-review.md` | <last impl stage> | direct | inline | <model> | <effort> |
 
+This table is the **single authoritative home** for every stage's `depends` /
+`mode` / `exec` / `model` / `effort`. Stage files never restate them (a copy is
+what drifts), and the tooling reads them from here: `/plan-run`'s weight check
+reads `model`/`effort` from this index, and the next-runnable-stage logic reads
+`depends` from it. A stage that isn't in this table is invisible to both — so
+adding a new stage (including one the final review spawns) means adding its row
+here first.
+
 Flag values: `mode` = `direct` \| `brainstorm`; `exec` = `inline` \|
 `subagent(<model>)`; `model`/`effort` = launch hints (checked, not faked).
 Defaults are deliberately cheap — `direct`, `inline`, the cheaper capable
