@@ -8,6 +8,12 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- **`plan-staged-rollout`:** a worked example of a scaffolded `.plan/` under
+  `examples/` — a complete toy project (3 implementation stages + the standing
+  final review) captured mid-rollout: a `done` stage with real acceptance output
+  pasted as ledger evidence, a `doing` stage with ticked step checkboxes and a
+  handoff note, and untouched `todo` stages — plus a tour README of the ledger
+  discipline it demonstrates. Linked from the plugin README (#11).
 - **`plan-staged-rollout`:** `/plan-stages` bootstrap now computes the modal `model`
   across the stage index and, when a strict majority of stages share one, recommends
   setting it as the session default (and notes it in the scaffolded `.plan/README.md`)

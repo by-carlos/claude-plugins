@@ -124,6 +124,12 @@ folder is fully portable: anyone can run a stage with the one-line prompt
 "Follow the instructions in `.plan/stage-N-<slug>.md`" even without this
 plugin installed. The commands are ergonomics, not a dependency.
 
+Want to see what a filled-in scaffold looks like before running bootstrap on
+a real project? [`examples/`](examples/) holds a complete `.plan/` for a toy
+project captured mid-rollout — a `done` stage with real acceptance evidence
+pasted in the ledger, a `doing` stage with ticked checkboxes and a handoff
+note — plus a tour of the discipline it demonstrates.
+
 ### 2. Execute — `/plan-run <N>` (repeat, one fresh session each)
 
 The session follows the operating protocol in `PLAN.md`:
@@ -362,6 +368,8 @@ plan-staged-rollout/
     SKILL.md                     # method: principles, decomposition guidance,
                                  #   flag heuristics, anti-patterns
     references/templates/        # PLAN.md, LEDGER.md, stage-N.md, README.md
+  examples/
+    uptime-page/.plan/           # worked example: a filled-in scaffold, mid-flight
   commands/
     plan-stages.md               # /plan-stages <idea>  — bootstrap .plan/
     plan-run.md                  # /plan-run <N>        — execute one stage
