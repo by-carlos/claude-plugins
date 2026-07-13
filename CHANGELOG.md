@@ -6,6 +6,18 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- **`plan-staged-rollout`:** a `.plan/`-aware `SessionStart` hook — opening a fresh
+  session in a repo with an active staged rollout now automatically surfaces the
+  rollout and its next runnable stage (a `doing` stage to resume, else the first
+  `todo` whose `depends` are all `done`), with the stage's recommended model/effort
+  and the exact `/plan-run` invocation. It offers, never auto-runs — the weight
+  check and dependency gate in `PLAN.md` still govern execution. No `.plan/` in the
+  repo → the hook emits nothing; malformed files or parse ambiguity fail silent
+  (#13). Cross-platform via the polyglot `run-hook.cmd` wrapper (Windows cmd.exe +
+  Unix), mirroring Superpowers' hook layout.
+
 ### Fixed
 
 - **`plan-staged-rollout`:** stage sessions and closeout now run a **Preflight & sync**

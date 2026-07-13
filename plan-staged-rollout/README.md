@@ -15,6 +15,12 @@ and keeps every decision in exactly one place so the plan never drifts.
 Each is also model-invocable in natural language once installed — e.g. "run
 stage 3 of the plan" — the slash form above is the explicit fallback.
 
+And once a rollout is in progress, you don't have to remember any of it: a
+`SessionStart` hook detects the `.plan/` directory and tells a fresh session
+which stage is next and at what weight — resuming becomes "open a session and
+say yes". In repos without a `.plan/`, the hook stays silent (see
+[Session-start nudge](#session-start-nudge) below).
+
 ## Install
 
 From within Claude Code:
@@ -152,6 +158,24 @@ of the plan" again) resumes from the unticked boxes.
 external gate — the stage becomes a runbook with exact steps for you) and
 `skipped` (decided against, one-line reason recorded). Partial completion is a
 normal, resumable state, not a failure.
+
+### Session-start nudge
+
+The real friction of a multi-day rollout isn't typing a long command — it's
+that a fresh session doesn't know a rollout exists. A `SessionStart` hook
+closes that gap: when the repo has a `.plan/` directory, every new session
+starts already knowing the next runnable stage — a `doing` stage to resume,
+else the first `todo` whose `depends` are all `done` — plus its recommended
+model/effort from the stage index, and offers the exact `/plan-run` command.
+
+Deliberately narrow by design:
+
+- **Zero cost elsewhere.** No `.plan/` at the repo root → the hook emits
+  nothing. It only ever speaks in a repo with an active rollout.
+- **It offers, never runs.** Execution still belongs to the operating
+  protocol in `PLAN.md` — weight check, dependency gate, your go-ahead.
+- **Fail silent.** Malformed ledger, missing bash, parse ambiguity → no
+  output, exit 0. A session-start hook must never degrade a session.
 
 ### 3. Git model (default)
 
@@ -317,7 +341,6 @@ earlier stage's assumptions were written down.
 
 - Subagent fan-out for independent sub-steps within a stage
 - Parallel execution of independent stages
-- `next-stage` helper (list the next runnable stage from the ledger)
 - Progress dashboard rendered from the ledger
 - Skill evals (triggering accuracy, protocol adherence)
 
@@ -343,4 +366,8 @@ plan-staged-rollout/
     plan-stages.md               # /plan-stages <idea>  — bootstrap .plan/
     plan-run.md                  # /plan-run <N>        — execute one stage
     plan-close.md                # /plan-close          — final PR + cleanup
+  hooks/
+    hooks.json                   # SessionStart registration
+    run-hook.cmd                 # polyglot cmd/bash wrapper (Windows + Unix)
+    session-start                # .plan/-aware nudge: next runnable stage
 ```
