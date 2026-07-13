@@ -18,7 +18,7 @@ reads them. Reading and writing project fields needs the `project` scope on `gh`
 | **Status** | single-select | `Ready` = a Claude Code session can pick it up **now**. Anything not `Ready` (`Backlog`, `In progress`, `In review`, `Done`) is excluded from the queue. |
 | **Priority** | single-select `P0`–`P3` | primary sort key |
 | **Size** | single-select `XS`–`XL` | secondary sort key (smaller first) |
-| **Effort** | single-select | model/effort recommendation: `haiku`, `sonnet`, `sonnet-high`, `opus`, `opus-high`, or `human` (needs physical/account/GUI access Claude Code can't do) |
+| **Effort** | single-select | model + reasoning-effort recommendation: `haiku`; `sonnet-{low,med,high,extra,max,ultracode}`; `opus-{low,med,high,extra,max,ultracode}`; or `human` (needs physical/account/GUI access Claude Code can't do) |
 
 **Readiness invariant — set `Status = Ready` only when all hold:**
 - Priority, Size, and Effort are all set, **and**
