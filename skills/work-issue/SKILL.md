@@ -30,6 +30,11 @@ scope on `gh` (`gh auth refresh -s project`).
 
 ## 1. Fetch & assess
 
+- **Move to In progress first.** The moment you start investigating, flip the
+  issue's board `Status = In progress` — before reading the thread or touching
+  anything — so a parallel session won't grab it. In `next` mode this already
+  happened at selection (§0); in `/work-issue <number>` mode, do it now if the
+  issue is tracked on the triage board (skip silently if it isn't on a board).
 - Read the full thread, not just the body — decisions often live in the
   comments: `gh issue view <number> --comments`.
 - If the issue embeds images or attachments
@@ -72,12 +77,21 @@ scope on `gh` (`gh auth refresh -s project`).
 - PR description: what changed and why, any decisions or trade-offs worth a
   reviewer's attention, and `Closes #<number>` so the merge auto-closes the
   issue.
+- **Move to In review.** Once the code is in the PR and every non-merge step is
+  done — implementation complete, changelog updated, checks green — flip the
+  issue's board `Status = In review` (skip silently if it isn't on a board). The
+  issue now sits in review awaiting verification or your go-ahead to merge.
 
-## 5. Merge — confirmation required
+## 5. Merge — always last, confirmation required
 
+- **Merge is the final step, full stop.** Everything else — implementation,
+  commits, changelog, PR, any extra work the request bundled in ("do x and
+  merge") — must be complete *before* you merge. Never merge with steps
+  outstanding: a mid-flight error after merging would auto-close an issue that
+  isn't actually resolved. If any bundled task remains, finish it first.
 - Present the PR link and ask for explicit confirmation to merge. **Never
-  merge without it.** If confirmation doesn't come, leave the PR open and
-  finish the session cleanly.
+  merge without it.** If confirmation doesn't come, leave the PR open (Status
+  stays `In review`) and finish the session cleanly.
 - On OK: **squash merge** (unless the repo's own conventions specify a
   different merge type), then tidy up — delete the remote and local branch,
   switch back to the base, and pull.
@@ -86,7 +100,7 @@ scope on `gh` (`gh auth refresh -s project`).
 
 - The board's **"Item closed → Done"** workflow moves the merged card to `Done`
   automatically via `Closes #n` — no manual queue edit needed.
-- If the merge was **declined**, leave the PR open; the item stays `In progress`, so
+- If the merge was **declined**, leave the PR open; the item stays `In review`, so
   `next` won't re-grab it — finish or merge it by hand later.
 - Announce the queue head for the next run — one more `gh project item-list` (creds are
   already loaded): **"Next: #NN — \<title\> — suggested model: \<effort\>."** Read

@@ -6,6 +6,16 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **`/work-issue`** — tightened the board-status lifecycle: the issue moves to
+  `In progress` the moment investigation begins (now also in direct
+  `/work-issue <number>` mode, not just `next`); a new `In review` state is set
+  once the code is in the PR and every non-merge step is done, so the issue
+  sits awaiting verification/go-ahead; and the merge is now explicitly the
+  final step — any bundled work ("do x and merge") must finish before merging,
+  so a mid-flight error can't auto-close an unresolved issue.
+
 ## [0.2] — 2026-07-13
 
 ### Added
