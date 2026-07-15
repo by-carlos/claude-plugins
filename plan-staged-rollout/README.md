@@ -182,6 +182,11 @@ Deliberately narrow by design:
   protocol in `PLAN.md` — weight check, dependency gate, your go-ahead.
 - **Fail silent.** Malformed ledger, missing bash, parse ambiguity → no
   output, exit 0. A session-start hook must never degrade a session.
+- **Cross-platform.** The `.cmd` file is a cmd/bash polyglot wrapper, so the
+  hook runs on Linux, macOS, and Windows (via Git Bash). Its one real
+  dependency is `bash`; a Windows box without it simply gets no nudge — the
+  rest of the plugin is unaffected, since the commands are model-driven, not
+  shell scripts.
 
 ### 3. Git model (default)
 
