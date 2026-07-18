@@ -1,5 +1,5 @@
 ---
-name: triage-issue
+name: triage-issues
 description: Triage GitHub issues across one or more repos and rank them into a Projects (v2) board queue — dedup/consolidate, fix hygiene, and set Status/Priority/Size/Effort so `/work-issue next` can burn the queue down. Use for backlog triage, deduplication, or board grooming.
 ---
 
