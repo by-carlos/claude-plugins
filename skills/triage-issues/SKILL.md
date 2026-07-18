@@ -43,13 +43,33 @@ same stages, same format, skimmable, no filler.
 - **Board:** the Projects v2 board named at invocation (URL or number + owner). If none
   is named, default to the board the in-scope issues already sit on. A single board may
   hold items from several repos — that is expected and fine.
+- **Mode:** default runs are **incremental** — only *unsettled* issues get the
+  expensive per-issue deep read (Stage 0). Passing `--full` at invocation restores
+  the exhaustive behavior: every open issue is deep-read and deduped against the
+  entire board. Use `--full` when the board may have drifted or a fresh dedup
+  against the whole queue is wanted.
+
+An issue is **settled** (skipped in incremental mode) when its board fields already
+exclude it from future queue work: `Status = Ready`, **or** `Effort = human`.
+Everything else — not on the board, empty Status, empty Effort, `Backlog`,
+`In progress`, `In review` — is **unsettled** and gets the full deep read.
 </scope>
 
 <process>
 Stage 0 — Gather
-- Pull every open issue in scope via `gh`: full body, labels, comments, cross-references
-  (`gh issue list`, `gh issue view <n> --comments`).
-- **Resolve every cross-reference, and check whether the work already shipped.** For each
+- **Cheap pass (always).** Pull the board's items and their fields first —
+  `gh project item-list <number> --owner <owner> --format json --limit 500`
+  (raise `--limit` past the item count — it defaults to 30). Custom fields surface as
+  lowercased top-level keys (`status`, `priority`, `size`, `effort`); `content.type`
+  distinguishes `Issue` from `PullRequest`; `content.repository` is `owner/repo`. Then
+  list the open-issue set — `gh issue list` — for numbers, titles, and labels only.
+  This is cheap; it always runs in full.
+- **Classify.** Using the board fields just pulled, split open issues into **settled**
+  (`Status = Ready`, or `Effort = human`) and **unsettled** (everything else). In
+  `--full` mode, treat every open issue as unsettled.
+- **Deep pass (unsettled only, unless `--full`).** For each unsettled issue, pull the
+  full body, comments, and cross-references (`gh issue view <n> --comments`).
+  **Resolve every cross-reference, and check whether the work already shipped.** For each
   `#N` an issue names (umbrella, parent, "part of", "supersedes", "duplicate of"), pull
   that issue's state. If it is closed, get *what closed it* —
   `gh issue view <N> --json state,stateReason,closedByPullRequestsReferences` (the closing
@@ -59,11 +79,8 @@ Stage 0 — Gather
   the open issue's affected files is a strong signal the fix already merged and the child
   was merely never closed — carry it to Stage 2 §0, do not assume the parent was closed by
   mistake.
-- Pull the board's items and their fields:
-  `gh project item-list <number> --owner <owner> --format json --limit 500`
-  (raise `--limit` past the item count — it defaults to 30). Custom fields surface as
-  lowercased top-level keys (`status`, `priority`, `size`, `effort`); `content.type`
-  distinguishes `Issue` from `PullRequest`; `content.repository` is `owner/repo`.
+- **Settled issues are carried forward on their existing board fields — no deep read,
+  no re-examination.** Their Status/Priority/Size/Effort stay as-is.
 - Check repo layout only as needed to sanity-check "affected files" claims.
 - If `jq` is unavailable, use another parser (e.g. `python -c`) — don't stall on tooling.
 - If an issue references images/screenshots you can't render, say so on that issue's line.
