@@ -15,6 +15,11 @@ plugin follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   sits awaiting verification/go-ahead; and the merge is now explicitly the
   final step — any bundled work ("do x and merge") must finish before merging,
   so a mid-flight error can't auto-close an unresolved issue.
+- **`/triage-issue` renamed to `/triage-issues`.** Update any saved invocations.
+- **Incremental triage by default.** `/triage-issues` now deep-reads only untriaged
+  issues (not `Ready`, not `Effort = human`), cutting tokens and wall-time on
+  already-groomed boards. Pass `--full` for the previous exhaustive sweep (re-reads
+  every issue and dedups against the whole board).
 
 ## [0.2] — 2026-07-13
 
