@@ -1,6 +1,6 @@
 ---
-name: triage-issue
-description: Triage GitHub issues across one or more repos and rank them into a Projects (v2) board queue — dedup/consolidate, fix hygiene, and set Status/Priority/Size/Effort so `/work-issue next` can burn the queue down. Use for backlog triage, deduplication, or board grooming.
+name: triage-issues
+description: Triage GitHub issues across one or more repos and rank them into a Projects (v2) board queue — dedup/consolidate, fix hygiene, and set Status/Priority/Size/Effort so `/work-issue next` can burn the queue down. Runs incrementally by default (deep-reads only untriaged issues); pass `--full` for an exhaustive sweep. Use for backlog triage, deduplication, or board grooming.
 ---
 
 Run a reproducible GitHub issue triage session. The output is a **ranked queue on a
@@ -43,13 +43,33 @@ same stages, same format, skimmable, no filler.
 - **Board:** the Projects v2 board named at invocation (URL or number + owner). If none
   is named, default to the board the in-scope issues already sit on. A single board may
   hold items from several repos — that is expected and fine.
+- **Mode:** default runs are **incremental** — only *unsettled* issues get the
+  expensive per-issue deep read (Stage 0). Passing `--full` at invocation restores
+  the exhaustive behavior: every open issue is deep-read and deduped against the
+  entire board. Use `--full` when the board may have drifted or a fresh dedup
+  against the whole queue is wanted.
+
+An issue is **settled** (skipped in incremental mode) when its board fields already
+exclude it from future queue work: `Status = Ready`, **or** `Effort = human`.
+Everything else — not on the board, empty Status, empty Effort, `Backlog`,
+`In progress`, `In review` — is **unsettled** and gets the full deep read.
 </scope>
 
 <process>
 Stage 0 — Gather
-- Pull every open issue in scope via `gh`: full body, labels, comments, cross-references
-  (`gh issue list`, `gh issue view <n> --comments`).
-- **Resolve every cross-reference, and check whether the work already shipped.** For each
+- **Cheap pass (always).** Pull the board's items and their fields first —
+  `gh project item-list <number> --owner <owner> --format json --limit 500`
+  (raise `--limit` past the item count — it defaults to 30). Custom fields surface as
+  lowercased top-level keys (`status`, `priority`, `size`, `effort`); `content.type`
+  distinguishes `Issue` from `PullRequest`; `content.repository` is `owner/repo`. Then
+  list the open-issue set — `gh issue list` — for numbers, titles, and labels only.
+  This is cheap; it always runs in full.
+- **Classify.** Using the board fields just pulled, split open issues into **settled**
+  (`Status = Ready`, or `Effort = human`) and **unsettled** (everything else). In
+  `--full` mode, treat every open issue as unsettled.
+- **Deep pass (unsettled only, unless `--full`).** For each unsettled issue, pull the
+  full body, comments, and cross-references (`gh issue view <n> --comments`).
+  **Resolve every cross-reference, and check whether the work already shipped.** For each
   `#N` an issue names (umbrella, parent, "part of", "supersedes", "duplicate of"), pull
   that issue's state. If it is closed, get *what closed it* —
   `gh issue view <N> --json state,stateReason,closedByPullRequestsReferences` (the closing
@@ -59,17 +79,17 @@ Stage 0 — Gather
   the open issue's affected files is a strong signal the fix already merged and the child
   was merely never closed — carry it to Stage 2 §0, do not assume the parent was closed by
   mistake.
-- Pull the board's items and their fields:
-  `gh project item-list <number> --owner <owner> --format json --limit 500`
-  (raise `--limit` past the item count — it defaults to 30). Custom fields surface as
-  lowercased top-level keys (`status`, `priority`, `size`, `effort`); `content.type`
-  distinguishes `Issue` from `PullRequest`; `content.repository` is `owner/repo`.
+- **Settled issues are carried forward on their existing board fields — no deep read,
+  no re-examination.** Their Status/Priority/Size/Effort stay as-is.
 - Check repo layout only as needed to sanity-check "affected files" claims.
 - If `jq` is unavailable, use another parser (e.g. `python -c`) — don't stall on tooling.
 - If an issue references images/screenshots you can't render, say so on that issue's line.
   Never guess at unseen content.
 
 Stage 1 — Board & metadata hygiene
+Hygiene runs over **all** board items using the fields from the cheap pass — no deep
+read needed, so incremental mode never hides a mis-set field. Only the Stage 2
+body-level analysis is scoped to unsettled issues.
 - Flag open issues missing from the board.
 - Flag `Ready` items that violate the readiness invariant (missing Priority/Size/Effort,
   or Effort = `human`).
@@ -89,6 +109,10 @@ Output ONE numbered, skimmable list, grouped under these headers, one line per i
    downstream logic, same as Broken. A closed-`COMPLETED` parent is evidence the fix shipped,
    not that it was closed in error — prove it against the tree before concluding either way.
 1. **Duplicates** — issues that are the same work; which closes into which survivor.
+   In incremental mode, dedup runs **among the unsettled batch only** (those are already
+   deep-read, so it is free). Comparing unsettled issues against settled (`Ready` /
+   `human`) items happens **only under `--full`**, since that forces deep reads of
+   settled items.
 2. **Consolidate** — distinct issues whose scope overlaps enough that working them
    separately would conflict or re-tread the same files. Merge them into ONE issue:
    name the survivor, rewrite its body to cover the combined scope, bump its Size/Effort
@@ -139,6 +163,8 @@ smaller-size first:
 - Never batch-close, batch-edit, or write board fields without the Stage 2→3 go-ahead.
 - Never guess at unreadable content — state the limitation.
 - `Ready` is the only readiness signal; there is no separate readiness section.
+- Default runs are incremental: deep-read only unsettled issues (`Status ≠ Ready` **and**
+  `Effort ≠ human`). Never deep-read or re-dedup settled issues unless `--full` is passed.
 - Consolidate overlaps into one issue — never leave a "work these together" batch for the
   queue consumer to reconcile.
 - Never queue or re-implement work that already merged. When an issue cites a closed

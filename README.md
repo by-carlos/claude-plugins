@@ -42,7 +42,7 @@ of any plugin — install one by copying its folder into `~/.claude/skills/`
 (Claude Code, where it's also invocable as a slash command), or upload the
 folder to claude.ai / Claude Desktop.
 
-### [/triage-issue](skills/triage-issue/SKILL.md)
+### [/triage-issues](skills/triage-issues/SKILL.md)
 
 **Triage issues into a burn-down queue** — sweep open issues across one or more
 repos, dedup and *consolidate* overlaps, fix label/field hygiene, and rank the
@@ -51,8 +51,8 @@ survivors onto a GitHub Projects (v2) board (`Status` / `Priority` / `Size` /
 for a single go/no-go.
 
 ```
-/triage-issue                                    →  triage the current repo's board
-/triage-issue by-carlos/linux by-carlos/openwrt  →  triage several repos onto one board
+/triage-issues                                    →  triage the current repo's board
+/triage-issues by-carlos/linux by-carlos/openwrt  →  triage several repos onto one board
 ```
 
 ### [/work-issue](skills/work-issue/SKILL.md)
@@ -61,7 +61,7 @@ for a single go/no-go.
 scope (pushes back on epics and one-liners), branch as
 `<type>/<issue>-<slug>`, implement with conventional commits, open a PR that
 closes the issue, and squash-merge only after explicit confirmation. `next` mode
-pulls the top issue off the `/triage-issue` queue and works it.
+pulls the top issue off the `/triage-issues` queue and works it.
 
 ```
 /work-issue 42          →  work issue #42, based on main

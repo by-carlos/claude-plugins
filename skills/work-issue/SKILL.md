@@ -7,13 +7,13 @@ Work a GitHub issue end-to-end. Two ways to pick the issue:
 
 - **`/work-issue <number> [base]`** — work that specific issue.
 - **`/work-issue next`** — pull the top item off the triage queue (the Projects
-  board that [`/triage-issue`](../triage-issue/SKILL.md) populates) and work it.
+  board that [`/triage-issues`](../triage-issues/SKILL.md) populates) and work it.
 
 Use the base branch the user names; if none, default to `main`.
 
 ## 0. Pick the issue (`next` mode only)
 
-`next` reads the same board schema `/triage-issue` writes, so it needs the `project`
+`next` reads the same board schema `/triage-issues` writes, so it needs the `project`
 scope on `gh` (`gh auth refresh -s project`).
 
 - Take the queue head — the `Ready` issue with the lowest `(Priority P0<P1<P2<P3,
