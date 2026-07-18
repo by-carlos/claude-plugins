@@ -1,6 +1,6 @@
 ---
 name: triage-issues
-description: Triage GitHub issues across one or more repos and rank them into a Projects (v2) board queue — dedup/consolidate, fix hygiene, and set Status/Priority/Size/Effort so `/work-issue next` can burn the queue down. Use for backlog triage, deduplication, or board grooming.
+description: Triage GitHub issues across one or more repos and rank them into a Projects (v2) board queue — dedup/consolidate, fix hygiene, and set Status/Priority/Size/Effort so `/work-issue next` can burn the queue down. Runs incrementally by default (deep-reads only untriaged issues); pass `--full` for an exhaustive sweep. Use for backlog triage, deduplication, or board grooming.
 ---
 
 Run a reproducible GitHub issue triage session. The output is a **ranked queue on a
@@ -87,6 +87,9 @@ Stage 0 — Gather
   Never guess at unseen content.
 
 Stage 1 — Board & metadata hygiene
+Hygiene runs over **all** board items using the fields from the cheap pass — no deep
+read needed, so incremental mode never hides a mis-set field. Only the Stage 2
+body-level analysis is scoped to unsettled issues.
 - Flag open issues missing from the board.
 - Flag `Ready` items that violate the readiness invariant (missing Priority/Size/Effort,
   or Effort = `human`).
@@ -106,6 +109,10 @@ Output ONE numbered, skimmable list, grouped under these headers, one line per i
    downstream logic, same as Broken. A closed-`COMPLETED` parent is evidence the fix shipped,
    not that it was closed in error — prove it against the tree before concluding either way.
 1. **Duplicates** — issues that are the same work; which closes into which survivor.
+   In incremental mode, dedup runs **among the unsettled batch only** (those are already
+   deep-read, so it is free). Comparing unsettled issues against settled (`Ready` /
+   `human`) items happens **only under `--full`**, since that forces deep reads of
+   settled items.
 2. **Consolidate** — distinct issues whose scope overlaps enough that working them
    separately would conflict or re-tread the same files. Merge them into ONE issue:
    name the survivor, rewrite its body to cover the combined scope, bump its Size/Effort
@@ -156,6 +163,8 @@ smaller-size first:
 - Never batch-close, batch-edit, or write board fields without the Stage 2→3 go-ahead.
 - Never guess at unreadable content — state the limitation.
 - `Ready` is the only readiness signal; there is no separate readiness section.
+- Default runs are incremental: deep-read only unsettled issues (`Status ≠ Ready` **and**
+  `Effort ≠ human`). Never deep-read or re-dedup settled issues unless `--full` is passed.
 - Consolidate overlaps into one issue — never leave a "work these together" batch for the
   queue consumer to reconcile.
 - Never queue or re-implement work that already merged. When an issue cites a closed
