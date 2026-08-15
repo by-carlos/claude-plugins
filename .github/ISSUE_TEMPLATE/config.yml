@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: plan-staged-rollout — bugs and ideas
+    url: https://github.com/by-carlos/plan-staged-rollout/issues
+    about: Anything about how the plan-staged-rollout plugin behaves.
+  - name: daikenja — bugs and ideas
+    url: https://github.com/by-carlos/daikenja/issues
+    about: Anything about how the daikenja plugin behaves.

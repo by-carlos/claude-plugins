@@ -1,0 +1,4 @@
+# Normalize line endings for every text file on commit, regardless of the
+# contributor's core.autocrlf. This repo is all manifests and Markdown, so
+# there is nothing that needs CRLF.
+* text=auto eol=lf

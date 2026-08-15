@@ -1,0 +1,36 @@
+name: Catalog issue
+description: Something wrong with the marketplace itself — an entry, a source, or an install command.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This repo is the marketplace catalog only. For anything about how a
+        **plugin behaves**, please file in that plugin's own repository —
+        the links are on the "new issue" chooser and in the README.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Adding the marketplace (/plugin marketplace add)
+        - Installing a plugin (/plugin install)
+        - A plugin entry is missing, wrong, or misdescribed
+        - Other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you run, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Environment
+      description: Claude Code version and OS.
+      placeholder: "e.g. Claude Code 2.x on macOS 15"
+    validations:
+      required: false
