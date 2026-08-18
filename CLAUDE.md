@@ -72,10 +72,12 @@ Size/Effort discipline — lives in the maintainer's global `CLAUDE.md` /
   every push/PR: the manifest parses and is well-formed, no entry uses a
   relative-path source, every `github` source resolves at its pinned ref, and
   README links resolve. Stdlib only. Source resolution only covers repos the
-  run can see — a private plugin repo (daikenja is one) reports as a **skip**,
-  not a failure, so CI stays honest rather than red. A source that *is* visible
-  but whose `ref` or manifest is missing is a hard error. `GH_TOKEN` resolves
-  private sources locally.
+  run can see — a source in a repo the run cannot see reports as a **skip**, not
+  a failure, so CI stays honest rather than red. **Every catalogued source is
+  public today**, so nothing skips and every entry is genuinely resolved; a skip
+  appearing in a run means something changed, not business as usual. A source
+  that *is* visible but whose `ref` or manifest is missing is a hard error.
+  `GH_TOKEN` resolves private sources locally.
 - [gitleaks](https://github.com/gitleaks/gitleaks) runs in CI on every push/PR;
   historical findings would be baselined in `.gitleaks-baseline.json`
   (currently empty). CI-only by design — no local pre-commit hook.

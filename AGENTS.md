@@ -36,9 +36,10 @@ mode. They are also in `CLAUDE.md`; that copy is authoritative.
 - **Never push directly to `main`, and never merge unilaterally** — propose the
   merge and wait for the maintainer's OK. Squash by default; delete the branch
   after it merges.
-- **A private plugin source reporting as a CI *skip* is correct, not a
+- **A source the CI run cannot see reporting as a *skip* is correct, not a
   failure.** `scripts/validate_catalog.py` can only resolve sources the run can
-  see (daikenja is private). A source that *is* visible but whose `ref` or
+  see. Every catalogued source is public today, so nothing skips and a skip in a
+  run means something changed. A source that *is* visible but whose `ref` or
   manifest is missing is a hard error — don't conflate the two.
 - **Route issues by subject.** Only catalog-level problems belong here — a
   missing or misdescribed entry, an unresolvable source, a broken install
