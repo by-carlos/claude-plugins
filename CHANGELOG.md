@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - `scripts/validate_catalog.py` now rejects `github` sources and any url that
   isn't `https://`, so the SSH-only form can't come back.
+- The README now tells users to add the marketplace by its full `https://` URL
+  instead of the `by-carlos/claude-plugins` shorthand. Both work — the
+  marketplace path falls back to HTTPS when SSH isn't set up — but the shorthand
+  is recorded as a GitHub source, so the transport is re-decided by an SSH probe
+  on every refresh. The full URL is fetched the same way on every machine.
 
 ## [0.2.0] - 2026-08-15
 
