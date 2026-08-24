@@ -29,6 +29,11 @@ mode. They are also in `CLAUDE.md`; that copy is authoritative.
   every fresh install. Adding the marketplace still works, because that path
   falls back to HTTPS, so the breakage shows up only at install time. CI rejects
   both forms.
+- **The README's `marketplace add` line uses the full `https://` URL on
+  purpose** — don't shorten it to `by-carlos/claude-plugins`. The shorthand
+  works, but it is recorded on the user's machine as a `github` source, so its
+  transport is re-decided by an SSH probe on every refresh. CI does not enforce
+  this one.
 - **Never use a relative-path source** (`"source": "./some-dir"`). It resolves
   against whatever ref the consumer's marketplace clone sits at, which turns
   every merge to `main` here into an immediate release to every user. CI rejects

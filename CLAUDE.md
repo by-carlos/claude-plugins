@@ -39,6 +39,15 @@ lives in its own repository; this one just points at them.
   against whatever ref the consumer's marketplace clone sits at, which turns
   every merge to `main` here into an immediate release to every user. CI
   rejects it.
+- **The README's `marketplace add` line uses the full `https://` URL, and must
+  keep doing so.** Don't "simplify" it back to `by-carlos/claude-plugins`. The
+  shorthand is not broken — the marketplace path probes SSH and falls back to
+  HTTPS, verified with SSH made unavailable — but it is recorded in the user's
+  `known_marketplaces.json` as `{"source": "github", "repo": ...}`, so the
+  transport is re-decided by an SSH probe on every refresh and ends up differing
+  per machine. The full URL is recorded as `{"source": "git", "url": ...}` and is
+  fetched identically everywhere. Nothing in CI enforces this line, so it is
+  written down here instead.
 - **Merging here does not ship a plugin.** A plugin ships when its own repo
   moves `release`. What merging here *does* ship is the catalog itself — adding,
   removing or repointing an entry takes effect on the next
@@ -86,9 +95,10 @@ Size/Effort discipline — lives in the maintainer's global `CLAUDE.md` /
 - [`scripts/validate_catalog.py`](scripts/validate_catalog.py) runs in CI on
   every push/PR: the manifest parses and is well-formed, no entry uses a
   relative-path source, a `github` source or a non-`https://` url, every source
-  resolves at its pinned ref, and README links resolve. Stdlib only. A source
-  whose url is not a `github.com` URL cannot be resolved through the GitHub API
-  and reports as a skip. Source resolution only covers repos the
+  resolves at its pinned ref, and README links resolve. Stdlib only. A url on a
+  host other than `github.com` can't be resolved through the GitHub API and
+  reports as a skip; a url that *is* on `github.com` but isn't a plain
+  `<owner>/<repo>` URL is a hard error, not a skip. Source resolution only covers repos the
   run can see — a source in a repo the run cannot see reports as a **skip**, not
   a failure, so CI stays honest rather than red. **Every catalogued source is
   public today**, so nothing skips and every entry is genuinely resolved; a skip

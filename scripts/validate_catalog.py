@@ -105,13 +105,22 @@ def check_source(name, source):
         return
     repo = github_repo(url)
     if repo is None:
-        skipped.append(f"{name} ({url}@{ref}): not a github.com URL, cannot resolve")
+        if url.startswith("https://github.com/"):
+            err(
+                f"marketplace.json: plugin '{name}' source url '{url}' is on "
+                f"github.com but is not a plain repository URL "
+                f"(https://github.com/<owner>/<repo>.git)"
+            )
+        else:
+            skipped.append(
+                f"{name} ({url}@{ref}): not a github.com URL, cannot resolve"
+            )
         return
     resolve(name, repo, ref)
 
 
 def github_repo(url):
-    """owner/repo for a github.com https URL, else None."""
+    """owner/repo for a plain github.com https repository URL, else None."""
     match = re.fullmatch(
         r"https://github\.com/([A-Za-z0-9._-]+/[A-Za-z0-9._-]+?)(?:\.git)?/?", url
     )
