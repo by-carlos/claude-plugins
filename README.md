@@ -13,11 +13,17 @@ repository's `release` branch, so a plugin ships when its maintainer moves
 From within Claude Code:
 
 ```
-/plugin marketplace add by-carlos/claude-plugins
+/plugin marketplace add https://github.com/by-carlos/claude-plugins.git
 ```
 
 Then install what you want (below). Later, `/plugin marketplace update` pulls
 new plugin versions.
+
+Use the full URL rather than the `by-carlos/claude-plugins` shorthand. Both
+work, but the shorthand is recorded as a GitHub source, and Claude Code decides
+between SSH and HTTPS for those by probing your machine's SSH setup on every
+refresh. The full `https://` URL is fetched the same way on every machine and
+needs no SSH key.
 
 ## Plugins
 
