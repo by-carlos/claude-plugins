@@ -20,9 +20,15 @@ mode. They are also in `CLAUDE.md`; that copy is authoritative.
 - **This repo is the catalog and contains no plugin code.** Its only real
   content is `.claude-plugin/marketplace.json`. Each plugin lives in its own
   repository; this one just points at them.
-- **Every plugin entry must use a `github` source pinned to a `ref`** — in
-  practice `"ref": "release"`, the branch each plugin repo fast-forwards when it
-  releases.
+- **Every plugin entry must use a `url` source over `https://`, pinned to a
+  `ref`** — in practice `"ref": "release"`, the branch each plugin repo
+  fast-forwards when it releases.
+- **Never use a `github` owner/repo source, and never a non-`https://` url.**
+  Claude Code clones `github` shorthand sources over SSH by default, so the
+  install fails on any machine with no `github.com` host key and no SSH agent —
+  every fresh install. Adding the marketplace still works, because that path
+  falls back to HTTPS, so the breakage shows up only at install time. CI rejects
+  both forms.
 - **Never use a relative-path source** (`"source": "./some-dir"`). It resolves
   against whatever ref the consumer's marketplace clone sits at, which turns
   every merge to `main` here into an immediate release to every user. CI rejects

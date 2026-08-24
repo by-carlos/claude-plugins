@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 """Validate the marketplace catalog: the manifest parses and is well-formed,
-no plugin uses a relative-path source, every github source actually resolves at
-its pinned ref, and README links resolve. Stdlib only.
+every plugin source is an https:// git URL that actually resolves at its pinned
+ref, and README links resolve. Stdlib only.
+
+Plugin sources must be `url` sources over https://. A `github` owner/repo
+source is rejected: Claude Code clones those over SSH by default, which fails
+on any machine that has no github.com entry in known_hosts and no key loaded —
+a fresh install, in other words. Relative-path sources are rejected too; they
+resolve against whatever ref the consumer's marketplace clone sits at, which
+would make every merge to main an immediate release.
 
 Source resolution needs network access and only works for repositories this
 run can actually see. A source that isn't publicly visible — a private plugin
@@ -61,25 +68,54 @@ def load_manifest():
 
 
 def check_source(name, source):
-    """A published plugin must be sourced from another repo at a pinned ref."""
+    """A published plugin must be sourced over https:// from another repo at a
+    pinned ref."""
     if isinstance(source, str):
         err(
             f"marketplace.json: plugin '{name}' uses a relative-path source "
-            f"('{source}'); published plugins must use a github source"
+            f"('{source}'); published plugins must use an https:// url source"
         )
         return
     if not isinstance(source, dict):
         err(f"marketplace.json: plugin '{name}' has a malformed 'source'")
         return
     kind = source.get("source")
-    if kind != "github":
+    if kind == "github":
+        err(
+            f"marketplace.json: plugin '{name}' uses a 'github' owner/repo "
+            f"source; Claude Code clones those over SSH by default, which "
+            f"fails on a machine with no github.com host key or SSH agent. "
+            f"Use {{\"source\": \"url\", \"url\": \"https://github.com/"
+            f"{source.get('repo', '<owner>/<repo>')}.git\", \"ref\": ...}}"
+        )
+        return
+    if kind != "url":
         err(f"marketplace.json: plugin '{name}' has unsupported source type '{kind}'")
         return
-    repo, ref = source.get("repo"), source.get("ref")
-    if not repo or not ref:
-        err(f"marketplace.json: plugin '{name}' source is missing 'repo' or 'ref'")
+    url, ref = source.get("url"), source.get("ref")
+    if not url or not ref:
+        err(f"marketplace.json: plugin '{name}' source is missing 'url' or 'ref'")
+        return
+    if not url.startswith("https://"):
+        err(
+            f"marketplace.json: plugin '{name}' source url '{url}' is not "
+            f"https://; SSH and shorthand URLs fail on machines without SSH "
+            f"configured for the host"
+        )
+        return
+    repo = github_repo(url)
+    if repo is None:
+        skipped.append(f"{name} ({url}@{ref}): not a github.com URL, cannot resolve")
         return
     resolve(name, repo, ref)
+
+
+def github_repo(url):
+    """owner/repo for a github.com https URL, else None."""
+    match = re.fullmatch(
+        r"https://github\.com/([A-Za-z0-9._-]+/[A-Za-z0-9._-]+?)(?:\.git)?/?", url
+    )
+    return match.group(1) if match else None
 
 
 def resolve(name, repo, ref):

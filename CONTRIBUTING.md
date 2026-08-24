@@ -34,15 +34,24 @@ publishes a `release` branch. Add an entry to
 {
   "name": "<plugin-name>",
   "source": {
-    "source": "github",
-    "repo": "by-carlos/<repo>",
+    "source": "url",
+    "url": "https://github.com/by-carlos/<repo>.git",
     "ref": "release"
   },
   "description": "<one line>"
 }
 ```
 
-Relative-path sources (`"source": "./some-dir"`) are rejected by CI — they
+**Use the full `https://` URL, not the `github` owner/repo shorthand.** Claude
+Code clones `{"source": "github", "repo": "owner/repo"}` over SSH by default, so
+the install fails on any machine that has no `github.com` entry in
+`known_hosts` and no key loaded in `ssh-agent` — a fresh install, in other
+words, with *"Host key verification failed."* Adding the marketplace still
+works, because that path probes SSH and falls back to HTTPS, so the failure only
+shows up at `/plugin install`. CI rejects `github` sources and any url that
+isn't `https://`.
+
+Relative-path sources (`"source": "./some-dir"`) are rejected by CI too — they
 would resolve against whatever ref the marketplace clone sits at, which makes
 every merge to `main` a release.
 
@@ -55,9 +64,12 @@ that:
 - `.claude-plugin/marketplace.json` parses and carries `name`, `owner` and a
   non-empty `plugins` list.
 - Every plugin entry has a `name`, a `description` and a `source`.
-- No entry uses a relative-path source.
-- Every `github` source resolves — the repo exists and the `ref` is present,
-  and the plugin's `.claude-plugin/plugin.json` is fetchable at that ref.
+- No entry uses a relative-path source, a `github` source, or a url that isn't
+  `https://`.
+- Every source resolves — the repo exists and the `ref` is present, and the
+  plugin's `.claude-plugin/plugin.json` is fetchable at that ref. A url on a
+  host other than `github.com` can't be checked through the GitHub API and is
+  reported as a skip.
 - Relative links in `README.md` resolve.
 
 The script is stdlib-only Python (no external dependencies). Source resolution needs

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Plugin installs failed on any machine without SSH configured for GitHub, with
+  `Host key verification failed`. Both entries used a `github` owner/repo
+  source, which Claude Code clones over SSH by default. They now use a `url`
+  source with the full `https://` URL, so installs need no SSH key, no
+  `known_hosts` entry and no environment variable. Adding the marketplace was
+  never affected, which is why this looked like a broken plugin.
+
+### Changed
+
+- `scripts/validate_catalog.py` now rejects `github` sources and any url that
+  isn't `https://`, so the SSH-only form can't come back.
+
 ## [0.2.0] - 2026-08-15
 
 ### Added
