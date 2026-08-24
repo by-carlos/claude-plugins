@@ -42,8 +42,12 @@ mode. They are also in `CLAUDE.md`; that copy is authoritative.
   moves `release`. What merging *does* ship is the catalog itself: adding,
   removing or repointing an entry takes effect on the next
   `/plugin marketplace update`, so **keep `main` correct at all times**.
-- **No versions, tags, releases or changelog in this repo.** Versioning belongs
-  to each plugin's `plugin.json`. Don't reintroduce them here.
+- **No versions, tags or releases in this repo.** Versioning belongs to each
+  plugin's `plugin.json`. Don't reintroduce them here.
+- **`CHANGELOG.md` is dated, not versioned** — entries sit under a date heading
+  (`## 2026-08-24`), newest first, and there is no `[Unreleased]` section
+  because nothing here is ever released. Add an entry for a catalog change
+  worth finding later; skip it for wording fixes. CI does not enforce this.
 - **Never push directly to `main`, and never merge unilaterally** — propose the
   merge and wait for the maintainer's OK. Squash by default; delete the branch
   after it merges.

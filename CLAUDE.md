@@ -52,8 +52,17 @@ lives in its own repository; this one just points at them.
   moves `release`. What merging here *does* ship is the catalog itself — adding,
   removing or repointing an entry takes effect on the next
   `/plugin marketplace update`, so keep `main` correct at all times.
-- **No versions, tags, releases or changelog in this repo.** Versioning belongs
-  to each plugin's `plugin.json`. Don't reintroduce them here.
+- **No versions, tags or releases in this repo.** Versioning belongs to each
+  plugin's `plugin.json`. Don't reintroduce them here.
+- **[`CHANGELOG.md`](CHANGELOG.md) is dated, not versioned.** It records
+  catalog-level changes under a date heading (`## 2026-08-24`), newest first —
+  there is no version to number and no `[Unreleased]` section, because nothing
+  here is ever released. Add an entry for anything a user or a future maintainer
+  would want to find: an added, removed or repointed plugin entry, a change to
+  the distribution model, a change to what CI enforces. Skip it for pure
+  wording fixes. The date is the day the change reaches `main`; if a PR sits
+  open across a date boundary, correct the heading before merging. Nothing in CI
+  enforces this.
 
 ## Git & merge conventions
 

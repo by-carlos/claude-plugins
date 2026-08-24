@@ -1,11 +1,14 @@
 # Changelog
 
-All notable changes to this project are documented in this file.
+Notable changes to the catalog, newest first.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+This repository carries no versions, tags or releases — a plugin's version lives
+in its own `plugin.json`, and merging here ships only the catalog. Entries are
+therefore dated rather than numbered, and each date is the day the change
+reached `main`. The format otherwise follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased]
+## 2026-08-24
 
 ### Fixed
 
@@ -25,16 +28,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   marketplace path falls back to HTTPS when SSH isn't set up — but the shorthand
   is recorded as a GitHub source, so the transport is re-decided by an SSH probe
   on every refresh. The full URL is fetched the same way on every machine.
+- This changelog is dated rather than versioned, matching a repository that has
+  no versions to number.
 
-## [0.2.0] - 2026-08-15
+## 2026-08-15
 
 ### Added
 
 - `daikenja` plugin entry. Not an assistant — a sage you consult in the shape
   of a Claude Code plugin. It knows your work, the work around you, and where
-  to go next. (*) Currently available on private beta.
+  to go next. In private beta at the time it was listed.
 
-## [0.1.0] - 2026-07-08
+## 2026-07-08
 
 ### Added
 

@@ -18,7 +18,13 @@ contains the marketplace manifest and its supporting files — no plugin code.
 2. **Fork** the repo and branch off `main` (e.g. `fix/…`, `feat/…`, `docs/…`).
 3. **Commit** using [Conventional Commits](https://www.conventionalcommits.org/)
    (`feat:`, `fix:`, `docs:`, `chore:`, …) with clear, present-tense messages.
-4. **Open a PR** against `main`. Keep it focused — one logical change per PR —
+4. **Add a `CHANGELOG.md` entry** if the change is one a user or a future
+   maintainer would want to find — an added, removed or repointed plugin entry,
+   a change to the distribution model, a change to what CI enforces. Entries go
+   under a date heading (`## 2026-08-24`), newest first; there are no version
+   numbers and no `[Unreleased]` section, because nothing here is ever released.
+   Skip it for pure wording fixes.
+5. **Open a PR** against `main`. Keep it focused — one logical change per PR —
    and describe what changed and why.
 
 The maintainer ([Carlos Eng](https://github.com/by-carlos)) reviews and merges
