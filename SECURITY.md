@@ -27,8 +27,10 @@ before disclosing publicly.
 ## Supported versions
 
 Only the current state of `main` is supported. This repository is a catalog: it
-carries the `carlos-plugins` marketplace manifest and nothing else. There are no
-releases and no version history to support.
+carries the `carlos-plugins` marketplace manifest and nothing else. Claude Code
+reads the manifest from `main`, so that is the only state that can affect an
+installation; the `v0.2.0` tag is a historical marker, not a distribution
+channel.
 
 ## What is in scope
 
