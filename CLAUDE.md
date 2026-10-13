@@ -76,8 +76,9 @@ lives in its own repository; this one just points at them.
 
 File through `plan-staged-rollout:create-issue`: it and the maintainer's GitHub
 ticket template own when to file, the issue body format, labels, and the
-Size/Effort discipline. Never write an issue body by hand. This section adds
-only what is specific to this repo.
+Size/Effort discipline. Never write an issue body by hand. That template lives
+in the maintainer's own setup; anyone without it files through the web forms
+instead. This section adds only what is specific to this repo.
 
 - **Tracker & board:** issues live in `by-carlos/claude-plugins` and go to the
   **"Claude Plugins"** project (project 3). Its priority scale is **P0–P4**.
